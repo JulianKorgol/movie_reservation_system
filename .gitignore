@@ -1,0 +1,14 @@
+# IDEAs
+.idea/
+
+# END IDEAs
+
+
+# Backend
+venv/
+.venv/
+__pycache__/
+
+db.sqlite3
+
+#END Backend
