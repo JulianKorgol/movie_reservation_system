@@ -11,10 +11,18 @@ from rest_framework.status import (
 )
 from rest_framework.response import Response
 
+from drf_spectacular.utils import extend_schema
 
+
+@extend_schema(
+    summary='Health Check',
+    description='Check if the server is running.',
+    tags=['v1_General'],
+)
 class HealthCheckView(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
+    @extend_schema(auth=[])
     def get(self, req):
         return Response({
             'status': 'ok'
