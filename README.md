@@ -1,6 +1,6 @@
 # Movie Reservation System
 
-## Requirements
+## 🔦 Requirements
 
 ### Backend
 
@@ -16,7 +16,7 @@ node -v
 
 ```
 
-## How to run
+## 🏃 How to run
 
 ### Development
 
@@ -26,6 +26,23 @@ node -v
 python manage.py runserver
 ```
 
-## GitHub Flow
+## ⏳ GitHub Flow
 
-## Security
+We follow GitHub Flow best practices for collaboration.
+
+### Branch-es
+
+`main` branch is always stable, deployable.
+
+`dev` branch is to integrate all features in one place, just for devs.
+
+### Branch syntax
+
+We use clear prefixes for branches:
+
+- `feature/<short-description>` -> new features
+- `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs (example: chore/dependency-upgrade)
+- `fix/<short-description>` -> bug fixes
+- `docs/<short-description>` -> documentation changes
+
+## 🔒 Security
