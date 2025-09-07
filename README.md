@@ -37,12 +37,4 @@ npm run dev
 
 ## GitHub Flow
 
-	main → always deployable
-
-	feature/ branches → for new features
-
-	Pull Request → required before merge
-
-	Code review → at least 1 approval
-
 ## Security
