@@ -13,7 +13,9 @@ python3 -v
 
 ```bash
 node -v
-
+>= 18.17.0
+npm -v
+>= 9.0.0
 ```
 
 ## How to run
@@ -26,6 +28,21 @@ node -v
 python manage.py runserver
 ```
 
+#### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
 ## GitHub Flow
+
+	main → always deployable
+
+	feature/ branches → for new features
+
+	Pull Request → required before merge
+
+	Code review → at least 1 approval
 
 ## Security
