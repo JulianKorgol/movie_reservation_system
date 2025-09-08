@@ -1,6 +1,6 @@
 # Movie Reservation System
 
-## Requirements
+## 🔦 Requirements
 
 ### Backend
 
@@ -16,7 +16,7 @@ node -v
 
 ```
 
-## How to run
+## 🏃 How to run
 
 ### Development
 
@@ -26,6 +26,27 @@ node -v
 python manage.py runserver
 ```
 
-## GitHub Flow
+## ⏳ GitLab Flow
 
-## Security
+We follow GitLab Flow best practices for collaboration.
+
+GitLab Flow combines Git Flow and GitHub Flow by adding environment-specific branches, making it easier to track deployments while staying simpler than full Git Flow.
+
+### Branch-es
+
+`main` branch is always stable, deployable
+
+`production` branch is to integrate all features for the next release
+
+`type/<short-description>` branches are for specific features, fixes, chores, or docs
+
+### Branch syntax
+
+We use clear prefixes for branches:
+
+- `feature/<short-description>` -> new features
+- `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs
+- `fix/<short-description>` -> bug fixes
+- `docs/<short-description>` -> documentation changes
+
+## 🔒 Security
