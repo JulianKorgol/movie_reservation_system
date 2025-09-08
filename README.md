@@ -26,22 +26,26 @@ node -v
 python manage.py runserver
 ```
 
-## ⏳ GitHub Flow
+## ⏳ GitLab Flow
 
-We follow GitHub Flow best practices for collaboration.
+We follow GitLab Flow best practices for collaboration.
+
+GitLab Flow combines Git Flow and GitHub Flow by adding environment-specific branches, making it easier to track deployments while staying simpler than full Git Flow.
 
 ### Branch-es
 
-`main` branch is always stable, deployable.
+`main` branch is always stable, deployable
 
-`dev` branch is to integrate all features in one place, just for devs.
+`production` branch is to integrate all features for the next release
+
+`type/<short-description>` branches are for specific features, fixes, chores, or docs
 
 ### Branch syntax
 
 We use clear prefixes for branches:
 
 - `feature/<short-description>` -> new features
-- `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs (example: chore/dependency-upgrade)
+- `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs
 - `fix/<short-description>` -> bug fixes
 - `docs/<short-description>` -> documentation changes
 
