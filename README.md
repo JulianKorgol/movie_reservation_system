@@ -50,3 +50,6 @@ We use clear prefixes for branches:
 - `docs/<short-description>` -> documentation changes
 
 ## 🔒 Security
+- `admin/` -> Should be locked on production.
+- `docs/` -> Should be locked on production.
+- `schema/` -> Should be locked on production.
