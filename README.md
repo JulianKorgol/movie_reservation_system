@@ -13,7 +13,9 @@ python3 -v
 
 ```bash
 node -v
-
+>= 18.17.0
+npm -v
+>= 9.0.0
 ```
 
 ## 🏃 How to run
@@ -24,6 +26,13 @@ node -v
 
 ```bash
 python manage.py runserver
+```
+
+#### Frontend
+
+```bash
+npm install
+npm run dev
 ```
 
 ## ⏳ GitLab Flow
