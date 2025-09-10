@@ -62,3 +62,39 @@ We use clear prefixes for branches:
 - `admin/` -> Should be locked on production.
 - `docs/` -> Should be locked on production.
 - `schema/` -> Should be locked on production.
+
+## 📝 Commit Message Guidelines
+
+We enforce **Conventional Commits** using [commitlint](https://commitlint.js.org/).  
+This ensures consistency and makes it easier to generate changelogs and track changes.
+
+### ✅ Commit Message Format
+
+Each commit message should be structured as:
+```
+<type>: <short, lowercase description>
+[optional body]
+[optional footer(s)]
+```
+Examples:
+- `feat: add user login API`
+- `fix: correct typo in README`
+- `chore: update dependencies`
+- `docs: add contribution guide`
+
+### Allowed commit types
+
+- **feat** → new features
+- **fix** → bug fixes
+- **chore** → maintenance tasks that don’t affect app features or docs
+- **docs** → documentation changes
+- **refactor** → code restructuring without changing behavior
+- **test** → add or fix tests
+
+### Rules
+
+- Subject **must not** be empty
+- Subject **must** be in **lowercase**
+- Max length: **100 characters**
+
+⚠️ Commits that don’t follow this format will be **rejected** by Husky + commitlint.
