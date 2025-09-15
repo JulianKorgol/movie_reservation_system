@@ -14,3 +14,6 @@ db.sqlite3
 #END Backend
 
 node_modules
+
+.DS_Store
+.env
