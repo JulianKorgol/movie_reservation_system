@@ -1,5 +1,7 @@
 # Movie Reservation System
 
+API docs: http://localhost:8000/docs/ (require backend running)
+
 ## 🔦 Requirements
 
 ### Backend
@@ -25,6 +27,8 @@ npm -v
 #### Backend
 
 ```bash
+pip install -r backend/requirements.txt
+cd backend
 python manage.py runserver
 ```
 
@@ -39,7 +43,8 @@ npm run dev
 
 We follow GitLab Flow best practices for collaboration.
 
-GitLab Flow combines Git Flow and GitHub Flow by adding environment-specific branches, making it easier to track deployments while staying simpler than full Git Flow.
+GitLab Flow combines Git Flow and GitHub Flow by adding environment-specific branches, making it easier to track
+deployments while staying simpler than full Git Flow.
 
 ### Branch-es
 
@@ -59,6 +64,7 @@ We use clear prefixes for branches:
 - `docs/<short-description>` -> documentation changes
 
 ## 🔒 Security
+
 - `admin/` -> Should be locked on production.
 - `docs/` -> Should be locked on production.
 - `schema/` -> Should be locked on production.
@@ -71,12 +77,15 @@ This ensures consistency and makes it easier to generate changelogs and track ch
 ### ✅ Commit Message Format
 
 Each commit message should be structured as:
+
 ```
 <type>: <short, lowercase description>
 [optional body]
 [optional footer(s)]
 ```
+
 Examples:
+
 - `feat: add user login API`
 - `fix: correct typo in README`
 - `chore: update dependencies`
