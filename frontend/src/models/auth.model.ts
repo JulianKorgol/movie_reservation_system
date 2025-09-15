@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import {Account} from "@/models/account.model";
 
 export interface LoginRequest {
     email: string;
@@ -14,5 +14,5 @@ export interface SignUpRequest {
 
 export interface AuthResponse {
     token: string;
-    user: User;
+    account: Account;
 }

@@ -1,5 +1,7 @@
 import { LoginRequest, SignUpRequest, AuthResponse } from "@/models/auth.model";
+import {Account} from "@/models/account.model";
 import { User } from "@/models/user.model";
+import { Role } from "@/models/role.model";
 
 export const authService = {
     async login(data: LoginRequest): Promise<AuthResponse> {
@@ -7,17 +9,27 @@ export const authService = {
 
         const mockUser: User = {
             id: "1",
+            username: "johndoe",
             email: data.email,
+            password: data.password,
+        }
+
+        const mockRole: Role = {
+            id: "1",
+            name: "admin",
+        }
+
+        const mockAccount: Account = {
+            id: "1",
+            user: mockUser,
             firstName: "John",
             lastName: "Doe",
-            role: "user",
-            status: "active",
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            role: mockRole,
+            status: 1,
         };
 
         return new Promise((resolve) =>
-            setTimeout(() => resolve({ token: "mock-jwt-token", user: mockUser }), 1000)
+            setTimeout(() => resolve({ token: "mock-jwt-token", account: mockAccount }), 1000)
         );
     },
 
@@ -25,18 +37,28 @@ export const authService = {
         console.log("Mock sign-up request:", data);
 
         const mockUser: User = {
-            id: "2",
+            id: "1",
+            username: "johndoe",
             email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            role: "user",
-            status: "active",
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            password: data.password,
+        }
+
+        const mockRole: Role = {
+            id: "1",
+            name: "admin",
+        }
+
+        const mockAccount: Account = {
+            id: "1",
+            user: mockUser,
+            firstName: "John",
+            lastName: "Doe",
+            role: mockRole,
+            status: 1,
         };
 
         return new Promise((resolve) =>
-            setTimeout(() => resolve({ token: "mock-jwt-token", user: mockUser }), 1000)
+            setTimeout(() => resolve({ token: "mock-jwt-token", account: mockAccount }), 1000)
         );
     },
 };

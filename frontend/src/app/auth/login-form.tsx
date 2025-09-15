@@ -42,7 +42,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
             console.log("Login successful:", response);
 
             localStorage.setItem("authToken", response.token);
-            toast.success(`Welcome back, ${response.user.firstName}!`);
+            toast.success(`Welcome back, ${response.account.firstName}!`);
 
             // TODO: redirect to dashboard or home
         } catch (error) {
