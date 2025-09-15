@@ -9,7 +9,7 @@ export const authService = {
 
         const mockUser: User = {
             id: "1",
-            username: "johndoe",
+            username: data.email,
             email: data.email,
             password: data.password,
         }
@@ -38,7 +38,7 @@ export const authService = {
 
         const mockUser: User = {
             id: "1",
-            username: "johndoe",
+            username: data.email,
             email: data.email,
             password: data.password,
         }

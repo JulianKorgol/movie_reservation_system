@@ -1,57 +1,41 @@
 'use client';
+
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
-import {Input} from "@/components/ui/input";
-import {authService} from "@/services/auth.service";
-import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { authService } from "@/services/auth.service";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginSchema } from "@/schemas/login.schema";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import { useState } from "react";
 
 export default function LoginForm({ onSwitch }: { onSwitch: any }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginSchema>({
+        resolver: zodResolver(loginSchema),
+        mode: "onBlur",
+    });
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+    const [serverErrors, setServerErrors] = useState<string[]>([]);
 
-        if (!email) {
-            toast.error("Email is required");
-            setLoading(false);
-            return;
-        }
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            toast.error("Please enter a valid email");
-            setLoading(false);
-            return;
-        }
-        if (!password) {
-            toast.error("Password is required");
-            setLoading(false);
-            return;
-        }
-        if (password.length < 6) {
-            toast.error("Password must be at least 6 characters");
-            setLoading(false);
-            return;
-        }
-
+    const onSubmit = async (data: LoginSchema) => {
+        setServerErrors([]);
 
         try {
-            const response = await authService.login({ email, password });
+            const response = await authService.login(data);
             console.log("Login successful:", response);
-
             localStorage.setItem("authToken", response.token);
-            toast.success(`Welcome back, ${response.account.firstName}!`);
-
             // TODO: redirect to dashboard or home
         } catch (error) {
             console.error("Login failed:", error);
-            toast.error("Invalid email or password.");
-        } finally {
-            setLoading(false);
+            setServerErrors(["Invalid email or password."]);
         }
     };
+
+    const allErrors = [
+        ...Object.values(errors).map(err => err?.message as string),
+        ...serverErrors
+    ];
 
     return (
         <div className="font-sans min-h-screen p-8 pb-20 gap-16 sm:p-20">
@@ -60,53 +44,58 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
             </header>
 
             <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-4 max-w-sm mx-auto mt-20"
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-2 max-w-sm mx-auto mt-20"
                 noValidate
             >
                 <div>
-                    <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                    >
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                         Email
                     </label>
                     <Input
-                        type="email"
                         id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 block w-full"
-                        required
+                        type="email"
+                        {...register("email")}
+                        className={errors.email ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}
                     />
                 </div>
+
                 <div>
-                    <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-gray-700"
-                    >
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                         Password
                     </label>
                     <Input
-                        type="password"
                         id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="mt-1 block w-full"
-                        required
+                        type="password"
+                        {...register("password")}
+                        className={errors.password ? "border-red-500 focus:ring-red-500 focus:border-red-500" : ""}
                     />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Logging in..." : "Log In"}
+
+                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                    {isSubmitting ? "Logging in..." : "Log In"}
                 </Button>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    className="w-full mt-2"
-                    onClick={onSwitch}
-                >
+
+                <Button type="button" variant="ghost" className="w-full mt-2" onClick={onSwitch}>
                     Don&apos;t have an account? Sign Up
                 </Button>
+
+                {allErrors.length > 0 && (
+                    <Alert variant="destructive" className="mt-2 flex items-start gap-2">
+                        <AlertCircleIcon className="w-5 h-5 mt-1" />
+                        <div>
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>
+                                {allErrors.map((err, idx) => (
+                                    <span key={idx}>
+                                        {err}
+                                        <br />
+                                    </span>
+                                ))}
+                            </AlertDescription>
+                        </div>
+                    </Alert>
+                )}
             </form>
         </div>
     );
