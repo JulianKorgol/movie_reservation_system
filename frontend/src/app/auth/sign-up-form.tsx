@@ -50,7 +50,7 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
             >
                 <div className="flex gap-4">
                     <div className="flex-1">
-                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="firstName" className="block text-sm font-medium  mb-1">
                             First Name
                         </label>
                         <Input
@@ -60,7 +60,7 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
                         />
                     </div>
                     <div className="flex-1">
-                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="lastName" className="block text-sm font-medium  mb-1">
                             Last Name
                         </label>
                         <Input
@@ -72,7 +72,7 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
                 </div>
 
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <label htmlFor="email" className="block text-sm font-medium  mb-1">Email</label>
                     <Input
                         id="email"
                         type="email"
@@ -83,7 +83,7 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
 
                 <div className="flex gap-4">
                     <div className="flex-1">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium  mb-1">Password</label>
                         <Input
                             id="password"
                             type="password"
@@ -92,7 +92,7 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
                         />
                     </div>
                     <div className="flex-1">
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium  mb-1">Confirm Password</label>
                         <Input
                             id="confirmPassword"
                             type="password"

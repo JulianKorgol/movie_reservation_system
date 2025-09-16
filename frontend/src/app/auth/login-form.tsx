@@ -55,7 +55,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
                 noValidate
             >
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-sm font-medium mb-1">
                         Email
                     </label>
                     <Input
@@ -67,7 +67,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="password" className="block text-sm font-medium mb-1">
                         Password
                     </label>
                     <Input
