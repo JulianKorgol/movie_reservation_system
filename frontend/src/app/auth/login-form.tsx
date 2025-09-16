@@ -27,13 +27,6 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
         try {
             const response = await authService.login(data);
 
-            if (
-                data.email !== response.account.user.email ||
-                data.password !== response.account.user.password
-            ) {
-                throw new Error("Invalid credentials");
-            }
-
             localStorage.setItem("authToken", response.token);
             localStorage.setItem("authUser", JSON.stringify(response.account));
 
