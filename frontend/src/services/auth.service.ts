@@ -9,9 +9,9 @@ export const authService = {
 
         const mockUser: User = {
             id: "1",
-            username: data.email,
-            email: data.email,
-            password: data.password,
+            username: 'Artish',
+            email: 'mock@gmail.com',
+            password: 'Mock2025',
         }
 
         const mockRole: Role = {
@@ -22,8 +22,8 @@ export const authService = {
         const mockAccount: Account = {
             id: "1",
             user: mockUser,
-            firstName: "John",
-            lastName: "Doe",
+            firstName: "Paul",
+            lastName: "Walker",
             role: mockRole,
             status: 1,
         };

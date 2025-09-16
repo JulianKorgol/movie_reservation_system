@@ -7,7 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignUpSchema } from "@/schemas/signup.schema";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import {AlertCircleIcon} from "lucide-react";
+import {AlertCircleIcon, Loader2Icon} from "lucide-react";
+import {toast} from "sonner";
 
 export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
     const {
@@ -24,6 +25,8 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
             const response = await authService.signUp(data);
             console.log("Sign-up response:", response);
             localStorage.setItem("authToken", response.token);
+            toast.success(`Welcome, ${response.account.firstName}!`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
             // TODO: redirect to dashboard
         } catch (error) {
             console.error("Sign-up failed:", error);
@@ -100,7 +103,12 @@ export default function SignUpForm({ onSwitch }: { onSwitch: any }) {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? "Signing Up..." : "Sign Up"}
+                    {isSubmitting ? (
+                        <>
+                            <Loader2Icon className="animate-spin" />
+                            Signing Up...
+                        </>
+                    ) : "Sign Up"}
                 </Button>
 
                 <Button type="button" variant="ghost" className="w-full mt-2" onClick={onSwitch}>

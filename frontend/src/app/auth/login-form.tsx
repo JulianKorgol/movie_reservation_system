@@ -7,8 +7,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/login.schema";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircleIcon } from "lucide-react";
+import {AlertCircleIcon, Loader2Icon} from "lucide-react";
 import { useState } from "react";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 export default function LoginForm({ onSwitch }: { onSwitch: any }) {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginSchema>({
@@ -17,17 +19,28 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
     });
 
     const [serverErrors, setServerErrors] = useState<string[]>([]);
+    const router = useRouter();
 
     const onSubmit = async (data: LoginSchema) => {
         setServerErrors([]);
 
         try {
             const response = await authService.login(data);
-            console.log("Login successful:", response);
+
+            if (
+                data.email !== response.account.user.email ||
+                data.password !== response.account.user.password
+            ) {
+                throw new Error("Invalid credentials");
+            }
+
             localStorage.setItem("authToken", response.token);
-            // TODO: redirect to dashboard or home
+            localStorage.setItem("authUser", JSON.stringify(response.account));
+
+            toast.success(`Welcome back, ${response.account.firstName}!`);
+            router.push("/");
         } catch (error) {
-            console.error("Login failed:", error);
+            toast.error("Login failed. Please check your credentials.");
             setServerErrors(["Invalid email or password."]);
         }
     };
@@ -73,7 +86,12 @@ export default function LoginForm({ onSwitch }: { onSwitch: any }) {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? "Logging in..." : "Log In"}
+                    {isSubmitting ? (
+                        <>
+                            <Loader2Icon className="animate-spin" />
+                            Logging In...
+                        </>
+                    ) : "Log In"}
                 </Button>
 
                 <Button type="button" variant="ghost" className="w-full mt-2" onClick={onSwitch}>
