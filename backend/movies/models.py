@@ -108,10 +108,7 @@ class Movie(models.Model):
 
 
 class Showtime(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.SET_NULL, null=True)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    cinema_room = models.ForeignKey(CinemaRoom, on_delete=models.SET_NULL, null=True)
+    pass
 
 
 '''
