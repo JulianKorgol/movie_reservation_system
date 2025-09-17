@@ -159,7 +159,7 @@ Flow steps:
 
 ### User Dashboard Page
 
-<b>Goal:</b> Access to reservations and user data managment.
+<b>Goal:</b> Access to reservations and user data management.
 
 Features:
 
