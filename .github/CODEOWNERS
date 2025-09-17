@@ -1,11 +1,5 @@
 # Global
-* @JulianKorgol
+* @JulianKorgol @PiotrChoinski @ArtishGH
 
-# Frontend
-*.js @ArtishGH @PiotrChoinski
-*.ts @ArtishGH @PiotrChoinski
-*.jsx @ArtishGH @PiotrChoinski
-*.tsx @ArtishGH @PiotrChoinski
-
-# Backend
-*.py @@JulianKorgol
+# Docs
+# /docs/
