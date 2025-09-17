@@ -1,0 +1,11 @@
+# Global
+* @JulianKorgol
+
+# Frontend
+*.js @ArtishGH @PiotrChoinski
+*.ts @ArtishGH @PiotrChoinski
+*.jsx @ArtishGH @PiotrChoinski
+*.tsx @ArtishGH @PiotrChoinski
+
+# Backend
+*.py @@JulianKorgol
