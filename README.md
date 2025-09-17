@@ -203,6 +203,10 @@ Features:
 
 ## 🔒 Security
 
-- `admin/` -> Should be locked on production.
-- `docs/` -> Should be locked on production.
-- `schema/` -> Should be locked on production.
+### URLs
+
+List of URLs that should have restricted (or locked) access in production:
+
+- `/admin/`
+- `/docs/`
+- `/schema/`
