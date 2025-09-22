@@ -59,7 +59,7 @@ deployments while staying simpler than full Git Flow.
 
 We use clear prefixes for branches:
 
-- `feature/<short-description>` -> new features
+- `feat/<short-description>` -> new features
 - `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs
 - `fix/<short-description>` -> bug fixes
 - `docs/<short-description>` -> documentation changes
