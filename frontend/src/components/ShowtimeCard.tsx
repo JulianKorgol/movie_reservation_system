@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface ShowtimeCardProps {
@@ -35,9 +29,7 @@ export default function ShowtimeCard({
             {startTime} - {endTime}
           </CardDescription>
         </CardHeader>
-        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-          Seats available: {availableSeats}
-        </p>
+        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">Seats available: {availableSeats}</p>
       </CardContent>
 
       <div className="w-full md:w-fit flex-shrink-0 mt-4 md:mt-0">

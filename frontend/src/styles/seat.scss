@@ -1,0 +1,12 @@
+.seat {
+  &-available {
+    background-color: #dde5e9;
+  }
+  &-unavailable {
+    background-color: #272727;
+    color: white;
+  }
+  &-selected {
+    background-color: #9aff5b;
+  }
+}
