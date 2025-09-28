@@ -13,7 +13,7 @@ export default function NotFound() {
             Looks like you've ventured into the unknown digital realm.
           </p>
         </div>
-        <Button className="mx-auto px-10 hover:scale-105 transition-transform">
+        <Button className="mx-auto px-10">
           <Link href="/" prefetch={false}>
             Return to website
           </Link>
