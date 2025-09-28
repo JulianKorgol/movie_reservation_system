@@ -1,0 +1,14 @@
+name: Check Code Formatting
+
+on: [pull_request]
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+
+      - run: cd frontend
+      - run: npm ci
+      - run: npm run format:check
