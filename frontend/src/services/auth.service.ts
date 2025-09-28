@@ -22,8 +22,8 @@ export const authService = {
     const mockAccount: Account = {
       id: "1",
       user: mockUser,
-      firstName: "Paul",
-      lastName: "Walker",
+      first_name: "Paul",
+      last_name: "Walker",
       role: mockRole,
       status: 1,
     };
@@ -54,8 +54,8 @@ export const authService = {
     const mockAccount: Account = {
       id: "1",
       user: mockUser,
-      firstName: "John",
-      lastName: "Doe",
+      first_name: "John",
+      last_name: "Doe",
       role: mockRole,
       status: 1,
     };

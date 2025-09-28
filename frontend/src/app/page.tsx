@@ -1,21 +1,70 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
+import { Movie } from "@/models/movie.model";
+import { MovieGenre } from "@/models/movie-genre.model";
+
+import MovieCard from "../components/MovieCard";
+import MovieCardSkeleton from "../components/MovieCardSkeleton";
+import Filters from "../components/Filters";
+import SearchBar from "../components/SearchBar";
+
+import { mockMovies } from "@/mocks/movies";
+import { mockGenres } from "@/mocks/genres";
+
+export default function HomePage() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [genres, setGenres] = useState<MovieGenre[]>([]);
+  const [isLoadingMovies, setIsLoadingMovies] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMovies(mockMovies);
+      setGenres(mockGenres);
+      setIsLoadingMovies(false);
+    }, 1000);
+  }, []);
+
+  const filteredMovies = movies.filter((movie) => {
+    const matchesGenre =
+      selectedGenres.length > 0
+        ? selectedGenres.includes(movie.genre?.name || "")
+        : true;
+    const matchesSearch = movie.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesGenre && matchesSearch;
+  });
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image className="dark:invert" src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Home Page is located at{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-        </ol>
-      </main>
+    <div className="p-6 max-w-7xl mx-auto pt-32">
+      <h1 className="text-3xl font-bold mb-4">Movie Listings</h1>
+      {isLoadingMovies ? (
+        <Skeleton height={40} className="rounded-lg mt-2" />
+      ) : (
+        <SearchBar query={searchQuery} onQueryChange={setSearchQuery} />
+      )}
+
+      <Filters
+        genres={genres}
+        selectedGenres={selectedGenres}
+        onFilterChange={setSelectedGenres}
+      />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+        {isLoadingMovies
+          ? Array.from({ length: 8 }).map((_, i) => (
+              <MovieCardSkeleton key={i} />
+            ))
+          : filteredMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+      </div>
     </div>
   );
 }
