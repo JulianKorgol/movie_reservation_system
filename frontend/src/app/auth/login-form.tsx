@@ -1,29 +1,28 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { authService } from "@/services/auth.service";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginSchema } from "@/schemas/login.schema";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircleIcon, Loader2Icon } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
 
-export default function LoginForm({
-  onSwitchAction,
-}: {
-  onSwitchAction: () => void;
-}) {
+import { useRouter } from 'next/navigation';
+
+import { type LoginSchema, loginSchema } from '@/schemas/login.schema';
+import { authService } from '@/services/auth.service';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+export default function LoginForm({ onSwitchAction }: { onSwitchAction: () => void }) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const [serverErrors, setServerErrors] = useState<string[]>([]);
@@ -35,14 +34,14 @@ export default function LoginForm({
     try {
       const response = await authService.login(data);
 
-      localStorage.setItem("authToken", response.token);
-      localStorage.setItem("authUser", JSON.stringify(response.account));
+      localStorage.setItem('authToken', response.token);
+      localStorage.setItem('authUser', JSON.stringify(response.account));
 
       toast.success(`Welcome back, ${response.account.firstName}!`);
-      router.push("/");
+      router.push('/');
     } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
-      setServerErrors(["Invalid email or password."]);
+      toast.error('Login failed. Please check your credentials.');
+      setServerErrors(['Invalid email or password.']);
     }
   };
 
@@ -69,12 +68,8 @@ export default function LoginForm({
           <Input
             id="email"
             type="email"
-            {...register("email")}
-            className={
-              errors.email
-                ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                : ""
-            }
+            {...register('email')}
+            className={errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''}
           />
         </div>
 
@@ -85,11 +80,9 @@ export default function LoginForm({
           <Input
             id="password"
             type="password"
-            {...register("password")}
+            {...register('password')}
             className={
-              errors.password
-                ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                : ""
+              errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''
             }
           />
         </div>
@@ -101,16 +94,11 @@ export default function LoginForm({
               Logging In...
             </>
           ) : (
-            "Log In"
+            'Log In'
           )}
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="w-full mt-2"
-          onClick={onSwitchAction}
-        >
+        <Button type="button" variant="ghost" className="w-full mt-2" onClick={onSwitchAction}>
           Don&apos;t have an account? Sign Up
         </Button>
 

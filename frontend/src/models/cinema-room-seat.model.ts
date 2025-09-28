@@ -1,4 +1,4 @@
-import { TicketType } from "@/models/ticket-type.model";
+import { TicketType } from '@/models/ticket-type.model';
 
 export interface CinemaRoomSeat {
   id?: number;

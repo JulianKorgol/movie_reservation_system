@@ -1,20 +1,22 @@
+import Link from 'next/link';
+
+import { Movie } from '@/models/movie.model';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Movie } from "@/models/movie.model";
-import Link from "next/link";
+} from '@/components/ui/card';
 
 const MovieCard = ({ movie }: { movie: Movie }) => (
   <Card className="flex flex-col h-full overflow-hidden">
     <div className="w-full aspect-[2/3] overflow-hidden">
       <img
-        src={movie.image_path ?? "/placeholder.jpg"}
+        src={movie.image_path ?? '/placeholder.jpg'}
         alt={movie.title}
         className="w-full h-full object-cover"
       />

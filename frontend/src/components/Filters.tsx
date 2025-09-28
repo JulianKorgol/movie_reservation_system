@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { MovieGenre } from "@/models/movie-genre.model";
+import { MovieGenre } from '@/models/movie-genre.model';
+
+import { Button } from '@/components/ui/button';
 
 interface FiltersProps {
   genres: MovieGenre[];
@@ -21,7 +22,7 @@ const Filters = ({ genres, selectedGenres, onFilterChange }: FiltersProps) => {
       {genres.map((genre) => (
         <Button
           key={genre.id}
-          variant={selectedGenres.includes(genre.name) ? "default" : "outline"}
+          variant={selectedGenres.includes(genre.name) ? 'default' : 'outline'}
           size="sm"
           onClick={() => toggleGenre(genre.name)}
         >

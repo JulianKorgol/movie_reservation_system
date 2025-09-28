@@ -1,5 +1,5 @@
-import { Account } from "@/models/account.model";
-import { Showtime } from "@/models/showtime.model";
+import { Account } from '@/models/account.model';
+import { Showtime } from '@/models/showtime.model';
 
 export interface Reservation {
   id?: string;
