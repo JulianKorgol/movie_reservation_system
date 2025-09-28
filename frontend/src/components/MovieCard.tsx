@@ -8,39 +8,28 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Movie } from "@/models/movie.model";
-
-{
-  /* for later use
-const description = (movie: Movie) => {
-  if (movie.description != null && movie.description.length > 100) {
-    const truncated = movie.description.slice(0, 100);
-    const lastSpace = truncated.lastIndexOf(" ");
-    return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + "...";
-  }
-  return movie.description;
-};
-*/
-}
+import Link from "next/link";
 
 const MovieCard = ({ movie }: { movie: Movie }) => (
-  <Card className="overflow-hidden flex flex-col">
-    <img
-      src={movie.image_path ?? ""}
-      alt={movie.title}
-      className="w-full object-cover"
-    />
-    <CardHeader>
-      <CardTitle>{movie.title}</CardTitle>
-      <CardDescription>{movie.genre?.name}</CardDescription>
+  <Card className="flex flex-col h-full overflow-hidden">
+    <div className="w-full aspect-[2/3] overflow-hidden">
+      <img
+        src={movie.image_path ?? "/placeholder.jpg"}
+        alt={movie.title}
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    <CardHeader className="p-4">
+      <CardTitle className="text-lg md:text-xl">{movie.title}</CardTitle>
+      <CardDescription className="text-sm text-gray-500 dark:text-gray-400">
+        {movie.genre?.name}
+      </CardDescription>
     </CardHeader>
-    <CardContent className="mt-auto">
-      {/*<p className="text-sm text-gray-600 dark:text-gray-400">*/}
-      {/*  {description(movie)}*/}
-      {/*</p>*/}
-    </CardContent>
-    <CardFooter>
+
+    <CardFooter className="p-4 mt-auto">
       <Button variant="default" className="w-full">
-        Book Now
+        <Link href={`/movies/${movie.url}`}>Book Now</Link>
       </Button>
     </CardFooter>
   </Card>
