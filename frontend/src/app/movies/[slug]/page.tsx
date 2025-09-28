@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { mockMovies } from "@/mocks/movies";
+import { showtimes } from "@/mocks/showtimes";
 import MovieDetailsSkeleton from "@/components/MovieDetailsSkeleton";
+import ShowtimeCard from "@/components/ShowtimeCard";
 
 import {
   Card,
@@ -13,6 +15,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function MoviePage() {
   const { slug } = useParams();
@@ -50,6 +53,29 @@ export default function MoviePage() {
             <p className="mt-4 text-gray-700 dark:text-gray-300">
               {movie.description}
             </p>
+          </div>
+
+          <div
+            className="mt-6 flex flex-col gap-4 max-h-100 overflow-y-auto pr-2"
+            style={{ scrollbarWidth: "thin" }}
+          >
+            {showtimes
+              .filter((showtime) => showtime.movie.id === movie.id)
+              .map((showtime) => (
+                <ShowtimeCard
+                  key={showtime.id}
+                  cinemaName="Cinema City"
+                  roomNumber={showtime.cinema_room.name}
+                  startTime={showtime.start_time}
+                  endTime={showtime.end_time}
+                  availableSeats={showtime.cinema_room.capacity}
+                  onBook={() =>
+                    toast.success("Booking successful!", {
+                      description: `You have booked a seat for ${movie.title} at ${showtime.start_time}.`,
+                    })
+                  }
+                />
+              ))}
           </div>
 
           <Button variant="default" className="mt-6 w-full self-start">

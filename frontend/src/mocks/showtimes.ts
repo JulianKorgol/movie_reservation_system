@@ -1,0 +1,88 @@
+import { mockMovies } from "@/mocks/movies";
+
+export const showtimes = [
+  {
+    id: "1",
+    movie: mockMovies[0],
+    start_time: "14:00",
+    end_time: "16:00",
+    cinema_room: { id: "1", name: "Room A", capacity: 100 },
+  },
+  {
+    id: "2",
+    movie: mockMovies[1],
+    start_time: "17:30",
+    end_time: "19:30",
+    cinema_room: { id: "2", name: "Room B", capacity: 80 },
+  },
+  {
+    id: "3",
+    movie: mockMovies[2],
+    start_time: "20:00",
+    end_time: "22:00",
+    cinema_room: { id: "1", name: "Room A", capacity: 100 },
+  },
+  {
+    id: "4",
+    movie: mockMovies[0],
+    start_time: "15:00",
+    end_time: "17:00",
+    cinema_room: { id: "1", name: "Room A", capacity: 100 },
+  },
+  {
+    id: "5",
+    movie: mockMovies[1],
+    start_time: "10:00",
+    end_time: "12:00",
+    cinema_room: { id: "3", name: "Room C", capacity: 60 },
+  },
+  {
+    id: "6",
+    movie: mockMovies[2],
+    start_time: "12:30",
+    end_time: "14:30",
+    cinema_room: { id: "2", name: "Room B", capacity: 80 },
+  },
+  {
+    id: "7",
+    movie: mockMovies[0],
+    start_time: "18:00",
+    end_time: "20:00",
+    cinema_room: { id: "3", name: "Room C", capacity: 60 },
+  },
+  {
+    id: "8",
+    movie: mockMovies[1],
+    start_time: "21:00",
+    end_time: "23:00",
+    cinema_room: { id: "2", name: "Room B", capacity: 80 },
+  },
+  {
+    id: "9",
+    movie: mockMovies[2],
+    start_time: "09:00",
+    end_time: "11:00",
+    cinema_room: { id: "1", name: "Room A", capacity: 100 },
+  },
+  {
+    id: "10",
+    movie: mockMovies[0],
+    start_time: "11:30",
+    end_time: "13:30",
+    cinema_room: { id: "2", name: "Room B", capacity: 80 },
+  },
+  {
+    id: "11",
+    movie: mockMovies[1],
+    start_time: "13:45",
+    end_time: "15:45",
+    cinema_room: { id: "3", name: "Room C", capacity: 60 },
+  },
+  {
+    id: "12",
+    movie: mockMovies[2],
+    start_time: "16:00",
+    end_time: "18:00",
+    cinema_room: { id: "1", name: "Room A", capacity: 100 },
+  },
+];
