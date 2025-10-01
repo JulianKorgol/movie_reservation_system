@@ -1,4 +1,5 @@
 # Movie Reservation System
+
 A web system built for cinema owners to manage movies and reservations efficiently.
 
 API docs: http://localhost:8000/docs/ (require backend running)
@@ -30,6 +31,9 @@ npm -v
 ```bash
 pip install -r backend/requirements.txt
 cd backend
+python manage.py makemigrations
+python manage.py migrate
+ python manage.py dev_db # Load Development data
 python manage.py runserver
 ```
 
@@ -63,7 +67,6 @@ We use clear prefixes for branches:
 - `chore/<short-description>` -> maintenance tasks that don’t affect app features or docs
 - `fix/<short-description>` -> bug fixes
 - `docs/<short-description>` -> documentation changes
-
 
 ## 📝 Commit Message Guidelines
 
