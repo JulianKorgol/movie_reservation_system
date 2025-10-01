@@ -3,13 +3,7 @@ import Link from 'next/link';
 import { Movie } from '@/models/movie.model';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 const MovieCard = ({ movie }: { movie: Movie }) => (
   <Card className="flex flex-col h-full overflow-hidden">
