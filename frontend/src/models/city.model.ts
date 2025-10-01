@@ -1,4 +1,4 @@
-import { Country } from "@/models/country.model";
+import { Country } from '@/models/country.model';
 
 export interface City {
   id?: string;

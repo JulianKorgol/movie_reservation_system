@@ -1,25 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import { useEffect, useState } from 'react';
 
-import { Movie } from "@/models/movie.model";
-import { MovieGenre } from "@/models/movie-genre.model";
+import { mockGenres } from '@/mocks/genres';
+import { mockMovies } from '@/mocks/movies';
+import { MovieGenre } from '@/models/movie-genre.model';
+import { Movie } from '@/models/movie.model';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-import MovieCard from "../components/MovieCard";
-import MovieCardSkeleton from "../components/MovieCardSkeleton";
-import Filters from "../components/Filters";
-import SearchBar from "../components/SearchBar";
-
-import { mockMovies } from "@/mocks/movies";
-import { mockGenres } from "@/mocks/genres";
+import Filters from '../components/Filters';
+import MovieCard from '../components/MovieCard';
+import MovieCardSkeleton from '../components/MovieCardSkeleton';
+import SearchBar from '../components/SearchBar';
 
 export default function HomePage() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genres, setGenres] = useState<MovieGenre[]>([]);
   const [isLoadingMovies, setIsLoadingMovies] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   useEffect(() => {
@@ -32,12 +31,8 @@ export default function HomePage() {
 
   const filteredMovies = movies.filter((movie) => {
     const matchesGenre =
-      selectedGenres.length > 0
-        ? selectedGenres.includes(movie.genre?.name || "")
-        : true;
-    const matchesSearch = movie.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+      selectedGenres.length > 0 ? selectedGenres.includes(movie.genre?.name || '') : true;
+    const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesGenre && matchesSearch;
   });
 
@@ -50,20 +45,12 @@ export default function HomePage() {
         <SearchBar query={searchQuery} onQueryChange={setSearchQuery} />
       )}
 
-      <Filters
-        genres={genres}
-        selectedGenres={selectedGenres}
-        onFilterChange={setSelectedGenres}
-      />
+      <Filters genres={genres} selectedGenres={selectedGenres} onFilterChange={setSelectedGenres} />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
         {isLoadingMovies
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <MovieCardSkeleton key={i} />
-            ))
-          : filteredMovies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
+          ? Array.from({ length: 8 }).map((_, i) => <MovieCardSkeleton key={i} />)
+          : filteredMovies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
       </div>
     </div>
   );

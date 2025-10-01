@@ -1,11 +1,7 @@
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
 const MovieCardSkeleton = () => (
   <Card className="overflow-hidden flex flex-col animate-pulse">

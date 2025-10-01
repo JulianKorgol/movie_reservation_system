@@ -1,39 +1,36 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { authService } from "@/services/auth.service";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, type SignUpSchema } from "@/schemas/signup.schema";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircleIcon, Loader2Icon } from "lucide-react";
-import { toast } from "sonner";
+import { type SignUpSchema, signupSchema } from '@/schemas/signup.schema';
+import { authService } from '@/services/auth.service';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircleIcon, Loader2Icon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-export default function SignUpForm({
-  onSwitchAction,
-}: {
-  onSwitchAction: () => void;
-}) {
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+export default function SignUpForm({ onSwitchAction }: { onSwitchAction: () => void }) {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignUpSchema>({
     resolver: zodResolver(signupSchema),
-    mode: "onBlur",
+    mode: 'onBlur',
   });
 
   const onSubmit = async (data: SignUpSchema) => {
     try {
       const response = await authService.signUp(data);
-      console.log("Sign-up response:", response);
-      localStorage.setItem("authToken", response.token);
+      console.log('Sign-up response:', response);
+      localStorage.setItem('authToken', response.token);
       toast.success(`Welcome, ${response.account.firstName}!`);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       // TODO: redirect to dashboard
     } catch (error) {
-      console.error("Sign-up failed:", error);
+      console.error('Sign-up failed:', error);
     }
   };
 
@@ -54,36 +51,26 @@ export default function SignUpForm({
       >
         <div className="flex gap-4">
           <div className="flex-1">
-            <label
-              htmlFor="firstName"
-              className="block text-sm font-medium  mb-1"
-            >
+            <label htmlFor="firstName" className="block text-sm font-medium  mb-1">
               First Name
             </label>
             <Input
               id="firstName"
-              {...register("firstName")}
+              {...register('firstName')}
               className={
-                errors.firstName
-                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                  : ""
+                errors.firstName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''
               }
             />
           </div>
           <div className="flex-1">
-            <label
-              htmlFor="lastName"
-              className="block text-sm font-medium  mb-1"
-            >
+            <label htmlFor="lastName" className="block text-sm font-medium  mb-1">
               Last Name
             </label>
             <Input
               id="lastName"
-              {...register("lastName")}
+              {...register('lastName')}
               className={
-                errors.lastName
-                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                  : ""
+                errors.lastName ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''
               }
             />
           </div>
@@ -96,49 +83,37 @@ export default function SignUpForm({
           <Input
             id="email"
             type="email"
-            {...register("email")}
-            className={
-              errors.email
-                ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                : ""
-            }
+            {...register('email')}
+            className={errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''}
           />
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium  mb-1"
-            >
+            <label htmlFor="password" className="block text-sm font-medium  mb-1">
               Password
             </label>
             <Input
               id="password"
               type="password"
-              {...register("password")}
+              {...register('password')}
               className={
-                errors.password
-                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                  : ""
+                errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''
               }
             />
           </div>
           <div className="flex-1">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium  mb-1"
-            >
+            <label htmlFor="confirmPassword" className="block text-sm font-medium  mb-1">
               Confirm Password
             </label>
             <Input
               id="confirmPassword"
               type="password"
-              {...register("confirmPassword")}
+              {...register('confirmPassword')}
               className={
                 errors.confirmPassword
-                  ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                  : ""
+                  ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                  : ''
               }
             />
           </div>
@@ -151,16 +126,11 @@ export default function SignUpForm({
               Signing Up...
             </>
           ) : (
-            "Sign Up"
+            'Sign Up'
           )}
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="w-full mt-2"
-          onClick={onSwitchAction}
-        >
+        <Button type="button" variant="ghost" className="w-full mt-2" onClick={onSwitchAction}>
           Already have an account? Log In
         </Button>
 

@@ -1,18 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
-import { mockMovies } from "@/mocks/movies";
-import MovieDetailsSkeleton from "@/components/MovieDetailsSkeleton";
+import { useEffect, useState } from 'react';
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { notFound, useParams } from 'next/navigation';
+
+import { mockMovies } from '@/mocks/movies';
+
+import MovieDetailsSkeleton from '@/components/MovieDetailsSkeleton';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function MoviePage() {
   const { slug } = useParams();
@@ -36,7 +32,7 @@ export default function MoviePage() {
     <div className="p-6 max-w-7xl mx-auto">
       <Card className="flex flex-col md:flex-row overflow-hidden">
         <img
-          src={movie.image_path ?? ""}
+          src={movie.image_path ?? ''}
           alt={movie.title}
           className="w-full md:w-1/2 h-full object-cover rounded-md"
         />
@@ -49,9 +45,7 @@ export default function MoviePage() {
                 {movie.genre?.name}
               </CardDescription>
             </CardHeader>
-            <p className="mt-4 text-gray-700 dark:text-gray-300">
-              {movie.description}
-            </p>
+            <p className="mt-4 text-gray-700 dark:text-gray-300">{movie.description}</p>
           </div>
 
           <Button variant="default" className="mt-6 w-full self-start">
