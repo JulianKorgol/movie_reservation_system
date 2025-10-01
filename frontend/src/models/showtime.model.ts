@@ -1,5 +1,5 @@
-import { Movie } from "@/models/movie.model";
-import { CinemaRoom } from "@/models/cinema-room.model";
+import { CinemaRoom } from '@/models/cinema-room.model';
+import { Movie } from '@/models/movie.model';
 
 export interface Showtime {
   id?: string;

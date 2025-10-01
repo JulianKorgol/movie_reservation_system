@@ -1,5 +1,5 @@
-import { CinemaRoomSeat } from "@/models/cinema-room-seat.model";
-import { TicketType } from "@/models/ticket-type.model";
+import { CinemaRoomSeat } from '@/models/cinema-room-seat.model';
+import { TicketType } from '@/models/ticket-type.model';
 
 export interface Reservation {
   id?: string;

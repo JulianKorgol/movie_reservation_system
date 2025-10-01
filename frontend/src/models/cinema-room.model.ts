@@ -1,4 +1,4 @@
-import { Cinema } from "@/models/cinema.model";
+import { Cinema } from '@/models/cinema.model';
 
 export interface CinemaRoom {
   id?: number;

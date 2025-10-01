@@ -1,5 +1,5 @@
-import { User } from "@/models/user.model";
-import { Role } from "@/models/role.model";
+import { Role } from '@/models/role.model';
+import { User } from '@/models/user.model';
 
 export interface Account {
   id?: string;
