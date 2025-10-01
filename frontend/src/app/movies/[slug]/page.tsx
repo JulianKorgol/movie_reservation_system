@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 
 import { mockMovies } from '@/mocks/movies';
 
@@ -24,7 +24,9 @@ export default function MoviePage() {
   }, [slug]);
 
   if (isLoading) return <MovieDetailsSkeleton />;
-  if (!movie) return <div className="p-6 text-center">Movie not found</div>;
+  if (!movie) {
+    return notFound();
+  }
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
