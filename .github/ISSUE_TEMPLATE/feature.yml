@@ -1,0 +1,31 @@
+name: "Feature"
+description: "For proposing a new feature"
+title: "[Feature][Frontend] <short subject>"
+labels: ["feature"]
+body:
+  - type: input
+    id: subject
+    attributes:
+      label: "Subject"
+      description: "What’s the short subject/title of this feature?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: lane
+    attributes:
+      label: "Which lane?"
+      options:
+        - Frontend
+        - Backend
+        - General
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: "Explain what this feature should do."
+    validations:
+      required: true
