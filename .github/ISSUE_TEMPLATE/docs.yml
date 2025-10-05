@@ -1,0 +1,17 @@
+name: "Docs"
+description: "For improving or adding documentation"
+title: "[Docs][General] <short subject>"
+labels: ["documentation"]
+body:
+  - type: input
+    id: subject
+    attributes:
+      label: "Docs Subject"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "Explain what needs documenting"
