@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -40,7 +39,7 @@ class ReservationProcessCountrySelection(generics.GenericAPIView):
       ]
     )
   })
-  def get(self, req) -> JsonResponse:
+  def get(self, req) -> Response:
     countries_from_db = Country.objects.all()
 
     countries = [
@@ -48,7 +47,7 @@ class ReservationProcessCountrySelection(generics.GenericAPIView):
       for country in countries_from_db
     ]
 
-    return JsonResponse({"countries": countries}, status=status.HTTP_200_OK)
+    return Response({"countries": countries}, status=status.HTTP_200_OK)
 
 
 @extend_schema(
@@ -108,11 +107,11 @@ class ReservationProcessCitySelection(generics.GenericAPIView):
                      ]
                    )
                  })
-  def get(self, req) -> JsonResponse | Response:
+  def get(self, req) -> Response:
     try:
       country = Country.objects.get(url=req.query_params.get("country_url"))
     except Country.DoesNotExist:
-      return JsonResponse(data={"error_code": 1}, status=status.HTTP_404_NOT_FOUND)
+      return Response(data={"error_code": 1}, status=status.HTTP_404_NOT_FOUND)
 
     cities_from_country = City.objects.filter(country=country)
 
@@ -121,4 +120,4 @@ class ReservationProcessCitySelection(generics.GenericAPIView):
       for c in cities_from_country
     ]
 
-    return JsonResponse({"cities": cities}, status=status.HTTP_200_OK)
+    return Response({"cities": cities}, status=status.HTTP_200_OK)
