@@ -1,0 +1,28 @@
+name: "Chore"
+description: "For maintenance or cleanup tasks"
+title: "[Chore][General] <short subject>"
+labels: ["chore"]
+body:
+  - type: input
+    id: subject
+    attributes:
+      label: "Chore Summary"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: lane
+    attributes:
+      label: "Which lane?"
+      options:
+        - Frontend
+        - Backend
+        - General
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "What needs to be done?"
