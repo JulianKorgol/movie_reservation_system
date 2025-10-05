@@ -1,23 +1,14 @@
 name: "Chore"
 description: "For maintenance or cleanup tasks"
-title: "[Chore][General] <short subject>"
+title: "[Chore][Frontend|Backend|General] <short subject>"
 labels: ["chore"]
 body:
   - type: input
     id: subject
     attributes:
       label: "Chore Summary"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: lane
-    attributes:
-      label: "Which lane?"
-      options:
-        - Frontend
-        - Backend
-        - General
+      description: "Briefly describe what needs to be done."
+      placeholder: "Example: Clean up unused components in the UI"
     validations:
       required: true
 
@@ -25,4 +16,5 @@ body:
     id: details
     attributes:
       label: "Details"
-      description: "What needs to be done?"
+      description: "Explain what needs maintenance or cleanup, and why it's needed."
+      placeholder: "Describe steps, affected areas, or follow-up tasks."
