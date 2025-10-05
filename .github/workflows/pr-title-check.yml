@@ -1,0 +1,49 @@
+name: "Lint PR Title"
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  check-title:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+
+    steps:
+      - name: Lint PR Title
+        id: lint_pr_title
+        uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          headerPattern: '^\[(?<type>Feature|Fix|Chore|Docs|Refactor|Test|Style|Research)]\[(?<scope>Frontend|Backend|DevOps|UX|General)] (?<subject>.+)$'
+          headerPatternCorrespondence: type, scope, subject
+          subjectPattern: '^[A-Z].*'
+
+      - name: Comment on invalid PR title
+        if: always() && steps.lint_pr_title.outputs.error_message != null
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr-title-lint-error
+          message: |
+            📝 **Heads up!** Your PR title doesn’t match the expected format:
+
+            `[Type][Lane] Subject`
+
+            Example valid titles:
+            - `[Feature][Frontend] Add Movie Room UI`
+            - `[Fix][Backend] Prevent overbooking on seats`
+            - `[Docs][General] Improve README`
+
+            Please update the PR title so it follows this format. Thanks! 🙂
+
+      - name: Remove comment if PR title fixed
+        if: steps.lint_pr_title.outputs.error_message == null
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: pr-title-lint-error
+          delete: true
