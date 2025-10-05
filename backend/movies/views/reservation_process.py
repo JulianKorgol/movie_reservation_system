@@ -105,9 +105,25 @@ class ReservationProcessCitySelection(generics.GenericAPIView):
                          }
                        )
                      ]
+                   ),
+                   400: OpenApiResponse(
+                     response=OpenApiTypes.OBJECT,
+                     examples=[
+                       OpenApiExample(
+                         name="Missing country_url",
+                         value={
+                           "error": "Missing required parameter: country_url",
+                           "error_code": 2
+                         }
+                       )
+                     ]
                    )
                  })
   def get(self, req) -> Response:
+    if not req.query_params.get("country_url"):
+      return Response(data={"error": "Missing required parameter: country_url", "error_code": 2},
+                      status=status.HTTP_400_BAD_REQUEST)
+
     try:
       country = Country.objects.get(url=req.query_params.get("country_url"))
     except Country.DoesNotExist:
