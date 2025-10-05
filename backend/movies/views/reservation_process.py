@@ -4,7 +4,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from movies.models import Country, City
-from movies.lib.public_models import PublicCountry, PublicCity, city
+from movies.lib.public_models import PublicCountry, PublicCity
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
