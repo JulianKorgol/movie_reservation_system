@@ -1,12 +1,14 @@
 name: "Docs"
 description: "For improving or adding documentation"
-title: "[Docs][General] <short subject>"
+title: "[Docs][Frontend|Backend|General] <short subject>"
 labels: ["documentation"]
 body:
   - type: input
     id: subject
     attributes:
-      label: "Docs Subject"
+      label: "Documentation Summary"
+      description: "Briefly describe what needs to be documented or updated."
+      placeholder: "Example: Add README section for setting up Prettier"
     validations:
       required: true
 
@@ -14,4 +16,5 @@ body:
     id: details
     attributes:
       label: "Details"
-      description: "Explain what needs documenting"
+      description: "Explain what documentation is missing, unclear, or needs improvement."
+      placeholder: "Include file paths, specific topics, or examples of missing info."

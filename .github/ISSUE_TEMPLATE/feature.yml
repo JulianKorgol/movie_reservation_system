@@ -1,24 +1,14 @@
 name: "Feature"
-description: "For proposing a new feature"
-title: "[Feature][Frontend] <short subject>"
+description: "For proposing a new feature or improvement"
+title: "[Feature][Frontend|Backend|General] <short subject>"
 labels: ["feature"]
 body:
   - type: input
     id: subject
     attributes:
-      label: "Subject"
-      description: "What’s the short subject/title of this feature?"
-    validations:
-      required: true
-
-  - type: dropdown
-    id: lane
-    attributes:
-      label: "Which lane?"
-      options:
-        - Frontend
-        - Backend
-        - General
+      label: "Feature Summary"
+      description: "Briefly describe the new feature or improvement."
+      placeholder: "Example: Add seat reservation visualization in movie room"
     validations:
       required: true
 
@@ -26,6 +16,7 @@ body:
     id: description
     attributes:
       label: "Description"
-      description: "Explain what this feature should do."
-    validations:
-      required: true
+      description: "Explain what this feature should do and why it’s needed."
+      placeholder: "Describe functionality, goals, user impact, or examples."
+      validations:
+        required: true
