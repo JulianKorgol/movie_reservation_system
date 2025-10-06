@@ -5,6 +5,7 @@ from movies.views import general, reservation_process
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('health-check/', general.HealthCheckView.as_view()),
-    path('reservation/countries', reservation_process.ReservationProcessCountrySelection.as_view()),
+  path('health-check/', general.HealthCheckView.as_view()),
+  path('reservation/countries', reservation_process.ReservationProcessCountrySelection.as_view()),
+  path('reservation/cities', reservation_process.ReservationProcessCitySelection.as_view()),
 ]
