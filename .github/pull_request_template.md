@@ -1,15 +1,15 @@
 ## 📋 Pull Request Overview
 
 **🧩 Title Format:**  
-`[Type][Lane] Short, descriptive subject`  
+`[type][lane] Short, descriptive subject`  
 
 _Examples:_  
-> `[Feature][Frontend] Add Movie Room UI`  
-> `[Fix][Backend] Prevent overbooking on seat reservations`  
-> `[Chore][DevOps] Update CI/CD pipeline`  
+> `[feature][frontend] add movie room ui`  
+> `[fix][backend] prevent overbooking on seat reservations`  
+> `[chore][devops] update ci/cd pipeline`  
 >   
-> Types: Feature, Fix, Chore, Docs, Refactor, Test, Style  
-> Lanes: Frontend, Backend, DevOps, UX, General  
+> Types: feature, fix, chore, docs, refactor, test, style  
+> Lanes: frontend, backend, devops, ux, general  
 
 ---
 
@@ -32,7 +32,7 @@ _Example:_
 
 ### ✅ Checklist Before Merge
 Totally optional but recommended to ensure quality and consistency  
-- [ ] PR title follows `[Type][Lane] Subject` format
+- [ ] PR title follows `[type][lane] subject` format
 - [ ] Commits follow Conventional Commit rules
 - [ ] Code formatted (Prettier) and linted
 - [ ] No console errors or warnings

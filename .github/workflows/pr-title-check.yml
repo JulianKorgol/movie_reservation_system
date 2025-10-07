@@ -20,9 +20,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          headerPattern: '^\[(?<type>Feature|Fix|Chore|Docs|Refactor|Test|Style|Research)]\[(?<scope>Frontend|Backend|DevOps|UX|General)] (?<subject>.+)$'
+          types: |
+            feat
+            fix
+            chore
+            docs
+            refactor
+            test
+            style
+            research
+          headerPattern: '^\[(?<type>feat|fix|chore|docs|refactor|test|style|research)]\[(?<scope>frontend|backend|devops|ux|general)] (?<subject>.+)$'
           headerPatternCorrespondence: type, scope, subject
-          subjectPattern: '^[A-Z].*'
+          subjectPattern: '^[a-zA-Z].*'
 
       - name: Comment on invalid PR title
         if: always() && steps.lint_pr_title.outputs.error_message != null
@@ -32,12 +41,12 @@ jobs:
           message: |
             📝 **Heads up!** Your PR title doesn’t match the expected format:
 
-            `[Type][Lane] Subject`
+            `[type][lane] subject`
 
             Example valid titles:
-            - `[Feature][Frontend] Add Movie Room UI`
-            - `[Fix][Backend] Prevent overbooking on seats`
-            - `[Docs][General] Improve README`
+            - `[feat][frontend] add movie room ui`
+            - `[fix][backend] prevent seat overbooking`
+            - `[docs][general] update readme instructions`
 
             Please update the PR title so it follows this format. Thanks! 🙂
 
