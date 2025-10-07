@@ -18,5 +18,5 @@ body:
       label: "Description"
       description: "Explain what this feature should do and why it’s needed."
       placeholder: "Describe functionality, goals, user impact, or examples."
-      validations:
-        required: true
+    validations:
+      required: true
