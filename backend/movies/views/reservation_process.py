@@ -159,7 +159,7 @@ class ReservationProcessCinemaSelection(generics.GenericAPIView):
                      response=OpenApiTypes.OBJECT,
                      examples=[
                        OpenApiExample(
-                         name="2 Cinemas",
+                         name="1 Cinema",
                          value={
                            "cinemas": [
                              {
