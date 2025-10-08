@@ -160,7 +160,18 @@ class ReservationProcessCinemaSelection(generics.GenericAPIView):
                      examples=[
                        OpenApiExample(
                          name="2 Cinemas",
-                         value={}
+                         value={
+                           "cinemas": [
+                             {
+                               "name": "Bonarka",
+                               "city": 12,
+                               "postal_code": "30-415",
+                               "street": "Kamieńskiego",
+                               "street_number": "11",
+                               "url": "bonarka"
+                             }
+                           ]
+                         }
                        ),
                        OpenApiExample(
                          name="None",
@@ -215,7 +226,7 @@ class ReservationProcessCinemaSelection(generics.GenericAPIView):
         street=cinema.street,
         street_number=cinema.street_number,
         url=cinema.url
-      )
+      ).model_dump()
       for cinema in cinemas_from_city
     ]
 
