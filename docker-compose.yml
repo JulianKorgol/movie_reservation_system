@@ -18,6 +18,8 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - movie_reservation_system_backend
     ports:
       - "3000:3000"
     environment:
