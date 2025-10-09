@@ -26,6 +26,18 @@ npm -v
 
 ### Development
 
+For development purposes, we recommend using Docker.
+
+You can start the Docker container with the following command:
+
+```bash
+docker compose up
+
+#Or, to run the container in detached mode (without attaching the console):
+
+docker compose up -d
+```
+
 #### Backend
 
 ```bash
@@ -121,29 +133,34 @@ reservation.
 Flow steps:
 
 1. Select Cinema Location
-    - User selects preferred cinema from a list of available locations.
+
+- User selects preferred cinema from a list of available locations.
 
 2. Choose movie and showtime
-    - User views list of movies playing at the chosen location.
-    - User selects a movie → shows all available showtimes (with date, time).
-        - User should be able to see movie list with showtimes on one page.
+
+- User views list of movies playing at the chosen location.
+- User selects a movie → shows all available showtimes (with date, time).
+  - User should be able to see movie list with showtimes on one page.
 
 3. Select ticket type and seat
-    - User chooses desired number and type of tickets (Standard, VIP, Student, etc.).
-    - Seat map is displayed for chosen showtime.
-    - User selects seats on the map.
-        - Backend should lock (hold) these seats temporarily to prevent over-booking.
-        - Backend returns a temporary reservation token
+
+- User chooses desired number and type of tickets (Standard, VIP, Student, etc.).
+- Seat map is displayed for chosen showtime.
+- User selects seats on the map.
+  - Backend should lock (hold) these seats temporarily to prevent over-booking.
+  - Backend returns a temporary reservation token
 
 4. Review reservation summary
-    - User reviews selected movie, showtime, seats, ticket type, and price breakdown.
-    - Option to go back and modify selection.
+
+- User reviews selected movie, showtime, seats, ticket type, and price breakdown.
+- Option to go back and modify selection.
 
 5. Confirm reservation
-    - User confirms reservation → backend finalizes booking.
-    - Backend checks if seat locks are still valid, then marks them as reserved.
-    - Reservation record is stored, and confirmation email is sent.
-    - Optional: Redirect to payment gateway (if enabled).
+
+- User confirms reservation → backend finalizes booking.
+- Backend checks if seat locks are still valid, then marks them as reserved.
+- Reservation record is stored, and confirmation email is sent.
+- Optional: Redirect to payment gateway (if enabled).
 
 #### Seat Hold Mechanism (Critical Logic)
 
@@ -152,8 +169,8 @@ Flow steps:
 - If the user confirms within the expiration window, the reservation is created and the hold is converted into a
   booking.
 - If the lock expires, the seats are released and become available again.
-    - Do not show to User (Flow) that seats hold expired if the token expires and seats are still free to take (user is
-      still in the reservation process).
+  - Do not show to User (Flow) that seats hold expired if the token expires and seats are still free to take (user is
+    still in the reservation process).
 
 ### Home Page
 
@@ -167,14 +184,16 @@ Flow steps:
 Features:
 
 1. Login panel
-    - User can log in.
-    - E-mail verification flow
+
+- User can log in.
+- E-mail verification flow
 
 2. Manage Reservations
-    - View upcoming and past reservations.
-    - Cancel upcoming reservations (if allowed by rules).
-    - Download reservation ticket (PDF/QR code).
-    - See reservation history.
+
+- View upcoming and past reservations.
+- Cancel upcoming reservations (if allowed by rules).
+- Download reservation ticket (PDF/QR code).
+- See reservation history.
 
 ### Admin Dashboard Page
 
@@ -183,29 +202,34 @@ Features:
 Features:
 
 1. Login panel
-    - Admin login with 2FA (optional)
+
+- Admin login with 2FA (optional)
 
 2. Movie and Showtime Management
-    - CRUD operations for Movies (title, description, poster, genre, etc.).
-    - CRUD operations for Theaters and Rooms (seat layout configuration).
-    - Create/edit/delete Showtimes linked to specific theaters.
-    - Adjust seats and add more rooms dynamically.
+
+- CRUD operations for Movies (title, description, poster, genre, etc.).
+- CRUD operations for Theaters and Rooms (seat layout configuration).
+- Create/edit/delete Showtimes linked to specific theaters.
+- Adjust seats and add more rooms dynamically.
 
 3. Weekly Scheduling
-    - Create a complete schedule for the upcoming week.
-    - Assign movies to timeslots and theaters.
+
+- Create a complete schedule for the upcoming week.
+- Assign movies to timeslots and theaters.
 
 4. Users Management
-    - View all registered users.
-    - Promote/demote users (assign admin role).
-    - Deactivate/ban users.
+
+- View all registered users.
+- Promote/demote users (assign admin role).
+- Deactivate/ban users.
 
 5. Reservations Management
-    - View all reservations.
-    - Cancel any reservation.
-    - See reservation details (user, showtime, seats).
-    - View seat capacity per room.
-    - View revenue reports (by showtime/date/movie). (optional, but wanted by idea creator)
+
+- View all reservations.
+- Cancel any reservation.
+- See reservation details (user, showtime, seats).
+- View seat capacity per room.
+- View revenue reports (by showtime/date/movie). (optional, but wanted by idea creator)
 
 ## 🔒 Security
 

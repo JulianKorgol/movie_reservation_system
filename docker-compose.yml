@@ -1,0 +1,32 @@
+services:
+  movie_reservation_system_backend:
+    container_name: movie_reservation_system_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=development
+    volumes:
+      - "./backend:/app"
+
+  movie_reservation_system_frontend:
+    container_name: movie_reservation_system_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - movie_reservation_system_backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - "./frontend:/app"
+      - frontend_node_modules:/app/node_modules
+
+volumes:
+  frontend_node_modules:
