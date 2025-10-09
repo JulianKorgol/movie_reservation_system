@@ -2,8 +2,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from movies.models import Country, City
-from movies.lib.public_models import PublicCountry, PublicCity
+from movies.models import Country, City, Cinema
+from movies.lib.public_models import PublicCountry, PublicCity, PublicCinema
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -137,3 +137,97 @@ class ReservationProcessCitySelection(generics.GenericAPIView):
     ]
 
     return Response({"cities": cities}, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+  summary="Cinema List",
+  description="List of cinemas from selected city",
+  tags=["v1", "ReservationProcess"],
+)
+class ReservationProcessCinemaSelection(generics.GenericAPIView):
+  permission_classes = [AllowAny]
+
+  @extend_schema(auth=[],
+                 parameters=[OpenApiParameter(
+                   name="city_url",
+                   type=OpenApiTypes.STR,
+                   description="Selected city",
+                   default="warszawa"
+                 )],
+                 responses={
+                   200: OpenApiResponse(
+                     response=OpenApiTypes.OBJECT,
+                     examples=[
+                       OpenApiExample(
+                         name="1 Cinema",
+                         value={
+                           "cinemas": [
+                             {
+                               "name": "Bonarka",
+                               "city": 12,
+                               "postal_code": "30-415",
+                               "street": "Kamieńskiego",
+                               "street_number": "11",
+                               "url": "bonarka"
+                             }
+                           ]
+                         }
+                       ),
+                       OpenApiExample(
+                         name="None",
+                         value={
+                           "cinemas": []
+                         }
+                       )
+                     ]
+                   ),
+                   400: OpenApiResponse(
+                     response=OpenApiTypes.OBJECT,
+                     examples=[
+                       OpenApiExample(
+                         name="Missing city_url",
+                         value={"error": "Missing required parameter: city_url", "error_code": 1}
+                       )
+                     ]
+                   ),
+                   404: OpenApiResponse(
+                     response=OpenApiTypes.OBJECT,
+                     examples=[
+                       OpenApiExample(
+                         name="City not found",
+                         value={
+                           "error": "City not found",
+                           "error_code": 2
+                         }
+                       )
+                     ]
+                   )
+                 }
+                 )
+  def get(self, req) -> Response:
+    req_par_city_url = req.query_params.get("city_url")
+    if not req_par_city_url:
+      return Response(data={"error": "Missing required parameter: city_url", "error_code": 1},
+                      status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+      selected_city = City.objects.get(url=req_par_city_url)
+    except City.DoesNotExist:
+      return Response(data={"error": "City not found", "error_code": 2},
+                      status=status.HTTP_404_NOT_FOUND)
+
+    cinemas_from_city = Cinema.objects.filter(city=selected_city)
+
+    cinemas = [
+      PublicCinema(
+        name=cinema.name,
+        city=cinema.city.id,
+        postal_code=cinema.postal_code,
+        street=cinema.street,
+        street_number=cinema.street_number,
+        url=cinema.url
+      ).model_dump()
+      for cinema in cinemas_from_city
+    ]
+
+    return Response(data={"cinemas": cinemas}, status=status.HTTP_200_OK)
