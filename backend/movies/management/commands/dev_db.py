@@ -1,6 +1,10 @@
+import random
+import datetime
 from decimal import Decimal
 
 from django.core.management.base import BaseCommand
+from django.db.models import Q
+from django.utils import timezone
 
 from movies.models import Country, City, Cinema, Movie, MovieGenre, CinemaRoom, CinemaRoomRow, CinemaRoomSeat, \
   TicketType, Showtime
@@ -183,14 +187,14 @@ class Command(BaseCommand):
     )
     movie_falcon_and_winter.save()
 
-    john_wick_4 = Movie.objects.create(
+    movie_john_wick_4 = Movie.objects.create(
       title="John Wick: Chapter 4",
       description="zzz",
       genre=movie_genre_action,
       image_path="zzz.jpg",
       url="john-wick-4"
     )
-    john_wick_4.save()
+    movie_john_wick_4.save()
 
     # ***END Movies***
 
@@ -394,5 +398,40 @@ class Command(BaseCommand):
 
     # ***Showtimes***
     Showtime.objects.all().delete()
+
+    start_date = timezone.make_aware(datetime.datetime(2025, 12, 22, 10, 0))
+    end_date = timezone.make_aware(datetime.datetime(2025, 12, 28, 23, 59))
+    for i in range(250):
+      for _ in range(10):
+        random_number_of_day = random.randint(0, (end_date - start_date).days)
+        date = start_date + datetime.timedelta(days=random_number_of_day)
+
+        hour = random.randint(10, 22)
+        minute = random.choice([0, 15, 30, 45])
+        start_time = timezone.make_aware(datetime.datetime(date.year, date.month, date.day, hour, minute))
+
+        duration = random.randint(120, 240)
+        end_time = start_time + datetime.timedelta(minutes=duration)
+
+        in_for_movie = random.choice([movie_f1, movie_fantastic4, movie_falcon_and_winter, movie_john_wick_4])
+        in_for_room = random.choice(
+          [room_first, room_second, room_third, room_waw2_first, room_waw2_second, room_waw2_third, room_third,
+           room_fourth, room_fifth, room_sixth, room_seven])
+
+        # Check for time conflicts
+        conflict_exists = Showtime.objects.filter(
+          cinema_room=in_for_room,
+        ).filter(
+          Q(start_date__lt=end_time) & Q(end_date__gt=start_time)
+        ).exists()
+
+        if not conflict_exists:
+          Showtime.objects.create(
+            movie=in_for_movie,
+            start_date=start_time,
+            end_date=end_time,
+            cinema_room=in_for_room
+          )
+          break
 
     # ***END Showtimes***
