@@ -8,4 +8,5 @@ urlpatterns = [
   path('health-check/', general.HealthCheckView.as_view()),
   path('reservation/countries', reservation_process.ReservationProcessCountrySelection.as_view()),
   path('reservation/cities', reservation_process.ReservationProcessCitySelection.as_view()),
+  path('reservation/cinemas', reservation_process.ReservationProcessCinemaSelection.as_view()),
 ]
