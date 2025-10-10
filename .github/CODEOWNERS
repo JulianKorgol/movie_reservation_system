@@ -21,4 +21,4 @@ commitlint.config.mjs @ArtishGH
 /.husky/ @ArtishGH
 
 # GitHub
-/.github/ @JulianKorgol
+/.github/ @JulianKorgol @ArtishGH
