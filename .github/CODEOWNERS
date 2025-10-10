@@ -1,5 +1,24 @@
-# Global
-* @JulianKorgol @PiotrChoinski @ArtishGH
+# Frontend
+/frontend/ @PiotrChoinski @ArtishGH
+
+# Backend
+/backend/ @JulianKorgol
 
 # Docs
-# /docs/
+/docs/ @JulianKorgol
+README.md @JulianKorgol
+LICENSE @JulianKorgol
+
+# Docker
+docker-compose.yml @JulianKorgol
+/backend/Dockerfile @JulianKorgol
+/frontend/Dockerfile @JulianKorgol
+
+# Husky
+package.json @ArtishGH
+package-lock.json @ArtishGH
+commitlint.config.mjs @ArtishGH
+/.husky/ @ArtishGH
+
+# GitHub
+/.github/ @JulianKorgol @ArtishGH
