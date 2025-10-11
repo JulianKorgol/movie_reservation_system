@@ -14,15 +14,19 @@ jobs:
       pull-requests: read
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Lint PR Title
         id: lint_pr_title
-        uses: amannn/action-semantic-pull-request@v6
+        uses: artishgh/pr-checker-action@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          headerPattern: '^\[(?<type>Feature|Fix|Chore|Docs|Refactor|Test|Style|Research)]\[(?<scope>Frontend|Backend|DevOps|UX|General)] (?<subject>.+)$'
-          headerPatternCorrespondence: type, scope, subject
-          subjectPattern: '^[A-Z].*'
+          types: "Feature,Fix,Chore,Docs,Refactor,Test,Style,Research"
+          scopes: "Frontend,Backend,DevOps,UX,General"
+          requireScope: true
+          headerPattern: '^\[(?<type>[^]]+)]\[(?<scope>[^]]+)] (?<subject>.+)$'
 
       - name: Comment on invalid PR title
         if: always() && steps.lint_pr_title.outputs.error_message != null
@@ -32,7 +36,7 @@ jobs:
           message: |
             📝 **Heads up!** Your PR title doesn’t match the expected format:
 
-            `[Type][Lane] Subject`
+            `[Type][Lane] Short, descriptive subject`
 
             Example valid titles:
             - `[Feature][Frontend] Add Movie Room UI`
