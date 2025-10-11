@@ -14,7 +14,7 @@ class Command(BaseCommand):
   help = "Load database with development data"
 
   def handle(self, *args, **options):
-    print("Loading development data")
+    print("Loading development data...")
 
     # ***Country***
     Country.objects.all().delete()
@@ -399,8 +399,8 @@ class Command(BaseCommand):
     # ***Showtimes***
     Showtime.objects.all().delete()
 
-    start_date = timezone.make_aware(datetime.datetime(2025, 12, 22, 10, 0))
-    end_date = timezone.make_aware(datetime.datetime(2025, 12, 28, 23, 59))
+    start_date = timezone.make_aware(datetime.datetime.now())
+    end_date = start_date + datetime.timedelta(days=7)
     for i in range(250):
       for _ in range(10):
         random_number_of_day = random.randint(0, (end_date - start_date).days)
@@ -435,3 +435,5 @@ class Command(BaseCommand):
           break
 
     # ***END Showtimes***
+
+    print("Loading development data finished!")
