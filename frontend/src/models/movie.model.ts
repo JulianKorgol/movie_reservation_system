@@ -1,7 +1,7 @@
 import { MovieGenre } from "@/models/movie-genre.model";
 
 export interface Movie {
-  id?: string;
+  id?: number;
   title: string;
   description?: string | null;
   genre?: MovieGenre | null;

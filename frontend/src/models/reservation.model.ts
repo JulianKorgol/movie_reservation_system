@@ -2,9 +2,9 @@ import { Account } from "@/models/account.model";
 import { Showtime } from "@/models/showtime.model";
 
 export interface Reservation {
-  id?: string;
-  account?: Account | null;
-  showtime?: Showtime | null;
+  id?: number;
+  account?: Account["id"] | null;
+  showtime?: Showtime["id"] | null;
   status: 1 | 2 | 3; // 1 - confirmed, 2 - cancelled, 3 - in progress
   token?: string | null;
   first_name?: string | null;

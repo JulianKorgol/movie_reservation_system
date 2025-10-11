@@ -1,6 +1,7 @@
 import { roomA, RoomAType } from "@/rooms/roomA";
 import Seat from "./ui/seat";
 import { RoomBType } from "@/rooms/roomB";
+import { mockCinemaRoomSeats } from "@/mocks/cinema-room-seats";
 
 export default function Room({ room }: { room: RoomAType | RoomBType }) {
   return (

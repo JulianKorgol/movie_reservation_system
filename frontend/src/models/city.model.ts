@@ -1,8 +1,8 @@
 import { Country } from "@/models/country.model";
 
 export interface City {
-  id?: string;
+  id?: number;
   name: string;
-  country: Country;
+  country: Country["id"];
   url: string;
 }
