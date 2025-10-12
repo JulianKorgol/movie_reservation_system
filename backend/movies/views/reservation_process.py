@@ -1,12 +1,16 @@
 import datetime
+from zoneinfo import ZoneInfo
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
 
+from django.utils import timezone
+
 from movies.models import Country, City, Cinema, CinemaRoom, Showtime, Movie
 from movies.lib.public_models import PublicCountry, PublicCity, PublicCinema
 from movies.lib.logs import app_logger
+from backend.settings import TIME_ZONE
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -249,14 +253,23 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                    name="cinema_url",
                    type=OpenApiTypes.STR,
                    description="Selected cinema",
-                   default="zlote-tarasy"
-                 )],
+                   default="zlote-tarasy",
+                   required=True
+                 ),
+                   OpenApiParameter(
+                     name="date",
+                     type=OpenApiTypes.DATE,
+                     description="Selected day to show showtimes",
+                     required=False,
+                     default=datetime.date.today()
+                   )
+                 ],
                  responses={
                    200: OpenApiResponse(
                      response=OpenApiTypes.OBJECT,
                      examples=[
                        OpenApiExample(
-                         name="OK",
+                         name="OK 1",
                          value={
                            "data": [
                              {
@@ -269,19 +282,9 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                                },
                                "showtimes": [
                                  {
-                                   "id": 1039,
-                                   "start_date": "2025-10-12T08:15:00Z",
-                                   "end_date": "2025-10-12T11:46:00Z"
-                                 },
-                                 {
-                                   "id": 1108,
-                                   "start_date": "2025-10-12T19:15:00Z",
-                                   "end_date": "2025-10-12T22:53:00Z"
-                                 },
-                                 {
-                                   "id": 1007,
-                                   "start_date": "2025-10-12T09:15:00Z",
-                                   "end_date": "2025-10-12T11:35:00Z"
+                                   "id": 2220,
+                                   "start_date": "2025-10-13T14:30:00+02:00",
+                                   "end_date": "2025-10-13T17:05:00+02:00"
                                  }
                                ]
                              },
@@ -295,9 +298,51 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                                },
                                "showtimes": [
                                  {
-                                   "id": 1019,
-                                   "start_date": "2025-10-12T15:00:00Z",
-                                   "end_date": "2025-10-12T17:31:00Z"
+                                   "id": 2171,
+                                   "start_date": "2025-10-12T22:00:00+02:00",
+                                   "end_date": "2025-10-13T01:27:00+02:00"
+                                 },
+                                 {
+                                   "id": 2241,
+                                   "start_date": "2025-10-14T11:30:00+02:00",
+                                   "end_date": "2025-10-14T15:09:00+02:00"
+                                 },
+                                 {
+                                   "id": 2309,
+                                   "start_date": "2025-10-13T20:15:00+02:00",
+                                   "end_date": "2025-10-13T22:37:00+02:00"
+                                 },
+                                 {
+                                   "id": 2204,
+                                   "start_date": "2025-10-13T11:00:00+02:00",
+                                   "end_date": "2025-10-13T14:05:00+02:00"
+                                 },
+                                 {
+                                   "id": 2310,
+                                   "start_date": "2025-10-12T20:00:00+02:00",
+                                   "end_date": "2025-10-12T22:33:00+02:00"
+                                 }
+                               ]
+                             }
+                           ]
+                         }
+                       ), OpenApiExample(
+                         name="OK 2 - None values",
+                         value={
+                           "data": [
+                             {
+                               "movie": {
+                                 "title": "F1",
+                                 "description": "xxx",
+                                 "genre_url": None,
+                                 "image_path": "xxx.jpg",
+                                 "url": "f1"
+                               },
+                               "showtimes": [
+                                 {
+                                   "id": 2220,
+                                   "start_date": "2025-10-13T14:30:00+02:00",
+                                   "end_date": "2025-10-13T17:05:00+02:00"
                                  }
                                ]
                              }
@@ -338,21 +383,52 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                        OpenApiExample(
                          name="Showtimes not found",
                          value={"error_code": 5}
+                       ),
+                       OpenApiExample(
+                         name="Movies not found",
+                         value={"error_code": 8}
                        )
                      ]
                    ),
+                   422: OpenApiResponse(
+                     response=OpenApiTypes.OBJECT,
+                     examples=[
+                       OpenApiExample(
+                         name="Incorrect format of date parameter",
+                         value={"error": "Parameter: date is in incorrect format", "error_code": 6}
+                       ),
+                       OpenApiExample(
+                         name="Date parameter is too far in the future",
+                         value={
+                           "error": "Parameter: date should not be more than 7 days in the future or date should not be in the past.",
+                           "error_code": 7}
+                       )
+                     ]
+                   )
                  }
                  )
   def get(self, req) -> Response:
-    '''
-    TODO:
-    1. Get param to also get showtimes for specific day (only 7 days upfront) [optional param]
-    '''
-
     req_par_cinema_url = req.query_params.get("cinema_url")
     if not req_par_cinema_url:
       return Response({"error": "Missing required parameter: cinema_url", "error_code": 1},
                       status=status.HTTP_400_BAD_REQUEST)
+
+    req_par_date = req.query_params.get("date")
+    selected_date = None
+    datetime_now = timezone.now()
+    if req_par_date:
+      try:
+        selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"))
+      except ValueError:
+        return Response({"error": "Parameter: date is in incorrect format", "error_code": 6},
+                        status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+      if selected_date.date() > datetime_now.date() + datetime.timedelta(
+        days=7) or selected_date.date() < datetime_now.date():
+        return Response(
+          {"error": "Parameter: date should not be more than 7 days in the future or date should not be in the past.",
+           "error_code": 7},
+          status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     selected_cinema = Cinema.objects.filter(url=req_par_cinema_url).first()
     if not selected_cinema:
@@ -363,17 +439,28 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
       app_logger.error(f"No cinema rooms: {selected_cinema.url} (ReservationProcessShowtimeSelection, 4)")
       return Response({"error_code": 4}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    showtimes = Showtime.objects.filter(
-      cinema_room__in=cinema_rooms,
-      start_date__range=(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=2))
-    )
+    if selected_date:
+      showtimes = Showtime.objects.filter(
+        cinema_room__in=cinema_rooms,
+        start_date__gte=datetime.datetime.combine(selected_date,
+                                                  datetime.datetime.min.time() if selected_date.date() > datetime_now.date() else datetime_now.time()),
+        end_date__lte=datetime.datetime.combine(selected_date, datetime.datetime.max.time())
+      )
+    else:
+      showtimes = Showtime.objects.filter(
+        cinema_room__in=cinema_rooms,
+        start_date__range=(datetime_now,
+                           datetime.datetime.combine(datetime_now.date() + datetime.timedelta(days=2),
+                                                     datetime.datetime.max.time()))
+      )
     if not showtimes.exists():
       return Response({"error": "No showtimes found", "error_code": 3}, status=status.HTTP_404_NOT_FOUND)
 
     movies_from_showtimes = Movie.objects.filter(id__in=showtimes.values_list("movie_id", flat=True))
     if not movies_from_showtimes.exists():
-      app_logger.error(f"No showtimes found for {selected_cinema.url} (ReservationProcessShowtimeSelection; 5)")
-      return Response({"error_code": 5}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+      app_logger.error(
+        f"No movies found for {selected_cinema.url} in {selected_date} (ReservationProcessShowtimeSelection; 8)")
+      return Response({"error_code": 8}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     response = [
       {
@@ -387,10 +474,11 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         "showtimes": [
           {
             "id": showtime.id,
-            "start_date": showtime.start_date,
-            "end_date": showtime.end_date
+            "start_date": showtime.start_date.astimezone(ZoneInfo(TIME_ZONE)),
+            "end_date": showtime.end_date.astimezone(ZoneInfo(TIME_ZONE)),
           }
-          for showtime in showtimes if showtime.movie == movie  # Additional check
+          for showtime in showtimes if
+          showtime.movie == movie and showtime.start_date > datetime_now
         ]
       }
       for movie in movies_from_showtimes
