@@ -348,6 +348,38 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                              }
                            ]
                          }
+                       ), OpenApiExample(
+                         name="OK 3 - No showtimes",
+                         value={
+                           "data": [
+                             {
+                               "movie": {
+                                 "title": "The Falcon and the Winter Soldier",
+                                 "description": "zzz",
+                                 "genre_url": "action",
+                                 "image_path": "zzz.jpg",
+                                 "url": "falcon-and-winter"
+                               },
+                               "showtimes": [
+                                 {
+                                   "id": 2780,
+                                   "start_date": "2025-10-12T20:15:00+02:00",
+                                   "end_date": "2025-10-12T23:07:00+02:00"
+                                 }
+                               ]
+                             },
+                             {
+                               "movie": {
+                                 "title": "John Wick: Chapter 4",
+                                 "description": "zzz",
+                                 "genre_url": "action",
+                                 "image_path": "zzz.jpg",
+                                 "url": "john-wick-4"
+                               },
+                               "showtimes": []
+                             }
+                           ]
+                         }
                        )
                      ]
                    ),
@@ -418,7 +450,8 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
     datetime_now = timezone.now()
     if req_par_date:
       try:
-        selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"))
+        selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"),
+                                            timezone=datetime_now.tzinfo)
       except ValueError:
         return Response({"error": "Parameter: date is in incorrect format", "error_code": 6},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY)
