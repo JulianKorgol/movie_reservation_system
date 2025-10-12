@@ -10,23 +10,17 @@ permissions:
 jobs:
   check-title:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: read
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
       - name: Lint PR Title
         id: lint_pr_title
         uses: artishgh/pr-checker-action@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           types: "Feature,Fix,Chore,Docs,Refactor,Test,Style,Research"
           scopes: "Frontend,Backend,DevOps,UX,General"
           requireScope: true
-          headerPattern: '^\[(?<type>[^]]+)]\[(?<scope>[^]]+)] (?<subject>.+)$'
+          headerPattern: '^\[(?<type>[^\]]+)]\[(?<scope>[^\]]+)] (?<subject>.+)$'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Comment on invalid PR title
         if: always() && steps.lint_pr_title.outputs.error_message != null
@@ -36,7 +30,7 @@ jobs:
           message: |
             📝 **Heads up!** Your PR title doesn’t match the expected format:
 
-            `[Type][Lane] Short, descriptive subject`
+            `[Type][Lane] Subject`
 
             Example valid titles:
             - `[Feature][Frontend] Add Movie Room UI`
@@ -44,6 +38,7 @@ jobs:
             - `[Docs][General] Improve README`
 
             Please update the PR title so it follows this format. Thanks! 🙂
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove comment if PR title fixed
         if: steps.lint_pr_title.outputs.error_message == null
@@ -51,3 +46,4 @@ jobs:
         with:
           header: pr-title-lint-error
           delete: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
