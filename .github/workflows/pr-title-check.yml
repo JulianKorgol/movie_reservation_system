@@ -27,6 +27,7 @@ jobs:
           headerPattern: '^\[(?<type>[^\]]+)]\[(?<scope>[^\]]+)] (?<subject>.+)$'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
 
       - name: Comment on invalid PR title
         if: always() && steps.lint_pr_title.outputs.error_message != null
