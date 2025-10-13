@@ -35,6 +35,7 @@ class Command(BaseCommand):
       email="super_admin@example.com",
     )
     user_super_admin.set_password("1234567890")
+    user_super_admin.save()
     user_super_admin_account = Account.objects.create(
       user=user_super_admin,
       role=role_super_admin,
@@ -47,6 +48,7 @@ class Command(BaseCommand):
       email="admin@example.com",
     )
     user_admin.set_password("qwerty")
+    user_admin.save()
     user_admin_account = Account.objects.create(
       user=user_admin,
       role=role_admin,
@@ -59,6 +61,7 @@ class Command(BaseCommand):
       email="user_first@example.com",
     )
     user_first.set_password('1234')
+    user_first.save()
     user_first_account = Account.objects.create(
       user=user_first,
       role=role_user,

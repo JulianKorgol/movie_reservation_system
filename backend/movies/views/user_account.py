@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -15,19 +16,14 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, 
   description="User account login endpoint",
   tags=["v1", "User"]
 )
-class UserAccountLogin(generics.GenericAPIView):
+class UserAccountLoginByPassword(generics.GenericAPIView):
   permission_classes = [AllowAny]
   serializer_class = UserAccountLoginSerializer
 
   @extend_schema(auth=[], responses={
     200: OpenApiResponse(
-      response=OpenApiTypes.OBJECT,
+      response=OpenApiTypes.NONE,
       description="OK - login successful",
-      examples=[
-        OpenApiExample(
-          name="OK"
-        )
-      ]
     ),
     400: OpenApiResponse(
       response=OpenApiTypes.OBJECT,
@@ -67,8 +63,8 @@ class UserAccountLogin(generics.GenericAPIView):
       return Response({"error": "Missing required data: email, password", "error_code": 1},
                       status=status.HTTP_400_BAD_REQUEST)
 
-    user = authenticate(email=email, password=password)
-    if user:
+    user = User.objects.get(email=email)
+    if user.check_password(password):
       if user.is_active:
         login(request, user)
         return Response(status=status.HTTP_200_OK)
@@ -95,14 +91,31 @@ class UserAccountAboutMe(generics.GenericAPIView):
           OpenApiExample(
             name="OK",
             value={
-              "user": {
+              "data": {
                 "email": "example@example.com",
-                "role": "User"
+                "first_name": "John",
+                "last_name": "XYZ",
+                "role": {
+                  "id": 3,
+                  "name": "User"
+                }
               },
-              "additional_data": {
+              "privileges": {
                 "is_super_admin": False,
                 "is_admin": False
               }
+            }
+          )
+        ]
+      ),
+      403: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="User not logged in",
+        examples=[
+          OpenApiExample(
+            name="No credentials",
+            value={
+              "detail": "Authentication credentials were not provided."
             }
           )
         ]
@@ -114,13 +127,18 @@ class UserAccountAboutMe(generics.GenericAPIView):
 
     return Response(
       {
-        "user": {
+        "data": {
           "email": user.email,
-          "role": user.role.name
+          "first_name": user.account.first_name,
+          "last_name": user.account.last_name,
+          "role": {
+            "id": user.account.role.id,
+            "name": user.account.role.name
+          }
         },
-        "additional_data": {
-          "is_super_admin": is_super_admin(request.account),
-          "is_admin": is_admin(request.account)
+        "privileges": {
+          "is_super_admin": is_super_admin(user.account),
+          "is_admin": is_admin(user.account)
         }
       }, status=status.HTTP_200_OK
     )
@@ -128,7 +146,7 @@ class UserAccountAboutMe(generics.GenericAPIView):
 
 @extend_schema(
   summary="User account logout",
-  description="Sending request to this session will logout user.",
+  description="Sending request to this endpoint will logout user.",
   tags=["v1", "User"]
 )
 class UserAccountLogOut(generics.GenericAPIView):
@@ -137,8 +155,20 @@ class UserAccountLogOut(generics.GenericAPIView):
   @extend_schema(
     responses={
       200: OpenApiResponse(
-        response=OpenApiTypes.OBJECT,
+        response=OpenApiTypes.NONE,
         description="OK - logout successful",
+      ),
+      403: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="User not logged in",
+        examples=[
+          OpenApiExample(
+            name="No credentials",
+            value={
+              "detail": "Authentication credentials were not provided."
+            }
+          )
+        ]
       )
     }
   )
