@@ -1,4 +1,4 @@
-name: Test PR Title Checker Action
+name: Lint PR Title
 
 on:
   pull_request:
