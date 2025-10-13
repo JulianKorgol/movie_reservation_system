@@ -19,7 +19,7 @@ jobs:
 
       - name: Run PR Title Checker
         id: lint_pr_title
-        uses: artishgh/pr-checker-action@v1.0.0
+        uses: artishgh/pr-checker-action@v1.1.0
         with:
           types: "Feature,Fix,Chore,Docs,Refactor,Test,Style,Research"
           scopes: "Frontend,Backend,DevOps,UX,General"
