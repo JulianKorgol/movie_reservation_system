@@ -30,7 +30,7 @@ jobs:
         continue-on-error: true
 
       - name: Comment on invalid PR title
-        if: always() && steps.lint_pr_title.outputs.error_message != null
+        if: failure()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr-title-lint-error
@@ -48,7 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Remove comment if PR title fixed
-        if: steps.lint_pr_title.outputs.error_message == null
+        if: success()
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pr-title-lint-error
