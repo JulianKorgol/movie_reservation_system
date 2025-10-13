@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from movies.serializers import UserAccountLoginSerializer
+from movies.lib.check import is_super_admin, is_admin
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -75,3 +76,51 @@ class UserAccountLogin(generics.GenericAPIView):
         return Response({"error": "User is suspended", "error_code": 3}, status=status.HTTP_403_FORBIDDEN)
 
     return Response({"error": "Invalid credentials", "error_code": 2}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@extend_schema(
+  summary="User account session check",
+  description="Check if user account session is valid",
+  tags=["v1", "User"]
+)
+class UserAccountCheckSession(generics.GenericAPIView):
+  permission_classes = [IsAuthenticated]
+
+  @extend_schema(
+    responses={
+      200: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="OK - login successful",
+        examples=[
+          OpenApiExample(
+            name="OK",
+            value={
+              "user": {
+                "email": "example@example.com",
+                "role": "User"
+              },
+              "additional_data": {
+                "is_super_admin": False,
+                "is_admin": False
+              }
+            }
+          )
+        ]
+      )
+    }
+  )
+  def get(self, request) -> Response:
+    user = request.user
+
+    return Response(
+      {
+        "user": {
+          "email": user.email,
+          "role": user.role.name
+        },
+        "additional_data": {
+          "is_super_admin": is_super_admin(request.account),
+          "is_admin": is_admin(request.account)
+        }
+      }, status=status.HTTP_200_OK
+    )
