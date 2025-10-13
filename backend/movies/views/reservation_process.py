@@ -70,7 +70,8 @@ class ReservationProcessCitySelection(generics.GenericAPIView):
                    name="country_url",
                    type=OpenApiTypes.STR,
                    description="Selected country",
-                   default="pl"
+                   default="pl",
+                   required=True
                  )],
                  responses={
                    200: OpenApiResponse(
@@ -159,7 +160,8 @@ class ReservationProcessCinemaSelection(generics.GenericAPIView):
                    name="city_url",
                    type=OpenApiTypes.STR,
                    description="Selected city",
-                   default="warszawa"
+                   default="warszawa",
+                   required=True
                  )],
                  responses={
                    200: OpenApiResponse(
@@ -242,7 +244,7 @@ class ReservationProcessCinemaSelection(generics.GenericAPIView):
 
 @extend_schema(
   summary="Showtimes List",
-  description="List of showtimes from the selected cinema. The endpoint returns showtimes for up to 2 days ahead. Use server time and server timezone",
+  description="List of showtimes from selected cinema. The endpoint returns showtimes for up to two days ahead. Use server time and server timezone.",
   tags=["v1", "ReservationProcess"],
 )
 class ReservationProcessShowtimeSelection(generics.GenericAPIView):
