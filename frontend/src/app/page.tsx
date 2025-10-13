@@ -21,13 +21,47 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
+  const api = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
-    setTimeout(() => {
-      setMovies(mockMovies);
-      setGenres(mockGenres);
-      setIsLoadingMovies(false);
-    }, 1000);
-  }, []);
+    const fetchMovies = async () => {
+      try {
+        // get tomorrow’s date in YYYY-MM-DD
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const formattedDate = tomorrow.toISOString().split('T')[0];
+
+        const response = await fetch(
+          `${api}/reservation/showtimes?cinema_url=zlote-tarasy&date=${formattedDate}`
+        );
+        if (!response.ok) throw new Error('Failed to fetch movies');
+
+        const json = await response.json();
+        console.log('API response:', json.data);
+
+        // Extract data.data from response
+        const formattedMovies: Movie[] = json.data.map((item: any) => ({
+          title: item.movie.title,
+          description: item.movie.description,
+          genre: { name: item.movie.genre_url },
+          image_path: 'https://image.tmdb.org/t/p/w1280/9PXZIUsSDh4alB80jheWX4fhZmy.jpg',
+          url: item.movie.url,
+          showtimes: item.showtimes || [],
+        }));
+
+        setMovies(formattedMovies);
+        setGenres(mockGenres); // temporary until real genres come from API
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        setMovies(mockMovies);
+        setGenres(mockGenres);
+      } finally {
+        setIsLoadingMovies(false);
+      }
+    };
+
+    fetchMovies();
+  }, [api]);
 
   const filteredMovies = movies.filter((movie) => {
     const matchesGenre =
@@ -50,7 +84,9 @@ export default function HomePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
         {isLoadingMovies
           ? Array.from({ length: 8 }).map((_, i) => <MovieCardSkeleton key={i} />)
-          : filteredMovies.map((movie) => <MovieCard key={movie.id} movie={movie} />)}
+          : filteredMovies.map((movie, i) => (
+              <MovieCard key={movie.url || `${movie.title}-${i}`} movie={movie} />
+            ))}
       </div>
     </div>
   );
