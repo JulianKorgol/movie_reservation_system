@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -79,11 +79,11 @@ class UserAccountLogin(generics.GenericAPIView):
 
 
 @extend_schema(
-  summary="User account session check",
-  description="Check if user account session is valid",
+  summary="User account details endpoint",
+  description="Get basic user account details",
   tags=["v1", "User"]
 )
-class UserAccountCheckSession(generics.GenericAPIView):
+class UserAccountAboutMe(generics.GenericAPIView):
   permission_classes = [IsAuthenticated]
 
   @extend_schema(
@@ -124,3 +124,24 @@ class UserAccountCheckSession(generics.GenericAPIView):
         }
       }, status=status.HTTP_200_OK
     )
+
+
+@extend_schema(
+  summary="User account logout",
+  description="Sending request to this session will logout user.",
+  tags=["v1", "User"]
+)
+class UserAccountLogOut(generics.GenericAPIView):
+  permission_classes = [IsAuthenticated]
+
+  @extend_schema(
+    responses={
+      200: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="OK - logout successful",
+      )
+    }
+  )
+  def get(self, request) -> Response:
+    logout(request)
+    return Response(status=status.HTTP_200_OK)
