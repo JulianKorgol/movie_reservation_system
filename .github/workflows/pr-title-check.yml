@@ -1,4 +1,4 @@
-name: "Lint PR Title"
+name: Test PR Title Checker Action
 
 on:
   pull_request:
@@ -27,7 +27,7 @@ jobs:
           headerPattern: '^\[(?<type>[^\]]+)]\[(?<scope>[^\]]+)] (?<subject>.+)$'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Comment on invalid PR title
         if: failure()
@@ -35,17 +35,27 @@ jobs:
         with:
           header: pr-title-lint-error
           message: |
-            📝 **Heads up!** Your PR title doesn’t match the expected format:
+            ⚠️ **PR Title Check Failed**
 
+            Your pull request title doesn't follow the required format:
+
+            **Format:**
             `[Type][Lane] Subject`
 
-            Example valid titles:
+            **Accepted Types:**
+            `Feature`, `Fix`, `Chore`, `Docs`, `Refactor`, `Test`, `Style`
+
+            **Accepted Lanes:**
+            `Frontend`, `Backend`, `DevOps`, `UX`, `General`
+
+            **✅ Examples:**
             - `[Feature][Frontend] Add Movie Room UI`
             - `[Fix][Backend] Prevent overbooking on seats`
             - `[Docs][General] Improve README`
 
-            Please update the PR title so it follows this format. Thanks! 🙂
+            Please update your PR title to match this format before merging. Thanks! 🙌
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Remove comment if PR title fixed
         if: success()
