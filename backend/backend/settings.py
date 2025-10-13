@@ -25,6 +25,12 @@ SECRET_KEY = 'django-insecure-8p8267_#kl)s1=r5%j(kx)p&va*n6lq7ngs5lasat0_at+d$#t
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = []
+
+if DEBUG:
+  ALLOWED_HOSTS.append('localhost')
+  CORS_ALLOWED_ORIGINS.append('http://localhost:3000')
+  CORS_ALLOWED_ORIGINS.append('http://localhost:8000')
 
 # Application definition
 
@@ -36,11 +42,13 @@ INSTALLED_APPS = [
   'django.contrib.messages',
   'django.contrib.staticfiles',
   'rest_framework',
+  'corsheaders',
   'movies',
   "drf_spectacular",
 ]
 
 MIDDLEWARE = [
+  'corsheaders.middleware.CorsMiddleware',
   'django.middleware.security.SecurityMiddleware',
   'django.contrib.sessions.middleware.SessionMiddleware',
   'django.middleware.common.CommonMiddleware',
