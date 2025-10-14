@@ -8,7 +8,6 @@ def is_admin(account: Account) -> bool:
 
 
 class IsAdminBasePermission(BasePermission):
-  def has_permission(self, request, view):
-    if is_admin(request.account):
-      return True
-    return False
+  def has_permission(self, request, view) -> bool:
+    account = Account.objects.filter(user=request.user).first()
+    return account is not None and is_admin(account)
