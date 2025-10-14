@@ -502,7 +502,10 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         "movie": {
           "title": movie.title,
           "description": movie.description,
-          "genre_url": movie.genre.url if movie.genre else None,
+          "genre": {
+            "name": movie.genre.name,
+            "url": movie.genre.url
+          } if movie.genre else None,
           "image_path": movie.image_path,
           "url": movie.url
         },
