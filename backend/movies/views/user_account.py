@@ -66,7 +66,7 @@ class UserAccountLoginWithPassword(generics.GenericAPIView):
 
     user = User.objects.filter(email=email).first()
     if user is not None and user.check_password(password):
-      if check_if_user_is_active(Account.objects.get(user=user)):
+      if check_if_user_is_active(Account.objects.filter(user=user).first()):
         login(request, user)
         return Response(status=status.HTTP_200_OK)
       else:
