@@ -162,3 +162,75 @@ class UserAccountLogOut(generics.GenericAPIView):
   def get(self, request) -> Response:
     logout(request)
     return Response(status=status.HTTP_200_OK)
+
+
+@extend_schema(
+  summary="User account special privileges info",
+  description="Get user account special privileges info if user has special privileges.",
+  tags=["v1", "User"]
+)
+class UserAccountPrivileges(generics.GenericAPIView):
+  permission_classes = [IsAuthenticated]
+
+  @extend_schema(
+    responses={
+      200: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="OK",
+        examples=[
+          OpenApiExample(
+            name="Super Admin privileges",
+            value={
+              "privileges": {
+                "is_super_admin": True
+              }
+            }
+          ),
+          OpenApiExample(
+            name="Admin privileges",
+            value={
+              "privileges": {
+                "is_admin": True
+              }
+            }
+          ),
+          OpenApiExample(
+            name="User - no special privileges",
+            value={
+              "privileges": None
+            }
+          )
+        ]
+      ),
+      403: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        description="User not logged in",
+        examples=[
+          OpenApiExample(
+            name="No credentials",
+            value={
+              "detail": "Authentication credentials were not provided."
+            }
+          )
+        ]
+      )
+    }
+  )
+  def get(self, request) -> Response:
+    user = request.user
+    account = Account.objects.filter(user=user).first()
+
+    if not account:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    privileges = {}
+
+    if is_super_admin(account):
+      privileges["is_super_admin"] = True
+
+    if is_admin(account):
+      privileges["is_admin"] = True
+
+    return Response({
+      "privileges": privileges if privileges else None,
+    }, status=status.HTTP_200_OK)
