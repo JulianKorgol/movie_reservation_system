@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { mockGenres } from '@/mocks/genres';
 import { mockMovies } from '@/mocks/movies';
 import { MovieGenre } from '@/models/movie-genre.model';
 import { Movie } from '@/models/movie.model';
@@ -26,35 +25,48 @@ export default function HomePage() {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // get tomorrow’s date in YYYY-MM-DD
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const formattedDate = tomorrow.toISOString().split('T')[0];
+        const today = new Date();
+        today.setDate(today.getDate() + 1);
+        const tomorrow = today.toISOString().split('T')[0];
 
         const response = await fetch(
-          `${api}/reservation/showtimes?cinema_url=zlote-tarasy&date=${formattedDate}`
+          `${api}/reservation/showtimes?cinema_url=zlote-tarasy&date=${tomorrow}`
         );
         if (!response.ok) throw new Error('Failed to fetch movies');
 
-        const json = await response.json();
-        console.log('API response:', json.data);
+        const data = await response.json();
 
-        // Extract data.data from response
-        const formattedMovies: Movie[] = json.data.map((item: any) => ({
-          title: item.movie.title,
-          description: item.movie.description,
-          genre: { name: item.movie.genre_url },
-          image_path: 'https://image.tmdb.org/t/p/w1280/9PXZIUsSDh4alB80jheWX4fhZmy.jpg',
-          url: item.movie.url,
-          showtimes: item.showtimes || [],
-        }));
+        const formattedMovies: Movie[] = data.data.map((item: any) => {
+          const mockMatch = mockMovies.find((mock) => mock.url === item.movie.url);
+
+          return {
+            title: item.movie.title,
+            description: item.movie.description,
+            genre: item.movie.genre
+              ? {
+                  name: item.movie.genre.name,
+                  url: item.movie.genre.url,
+                }
+              : null,
+            image_path: mockMatch?.image_path,
+            url: item.movie.url,
+          };
+        });
+
+        const uniqueGenres: MovieGenre[] = Array.from(
+          new Map(
+            formattedMovies
+              .filter((movie) => movie.genre)
+              .map((movie) => [movie.genre!.url, movie.genre!])
+          ).values()
+        );
 
         setMovies(formattedMovies);
-        setGenres(mockGenres); // temporary until real genres come from API
+        setGenres(uniqueGenres);
       } catch (error) {
         console.error('Error fetching movies:', error);
-        setMovies(mockMovies);
-        setGenres(mockGenres);
+        setMovies([]);
+        setGenres([]);
       } finally {
         setIsLoadingMovies(false);
       }
@@ -64,6 +76,7 @@ export default function HomePage() {
   }, [api]);
 
   const filteredMovies = movies.filter((movie) => {
+    if (movie.genre?.url === 'none') return false;
     const matchesGenre =
       selectedGenres.length > 0 ? selectedGenres.includes(movie.genre?.name || '') : true;
     const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -73,6 +86,7 @@ export default function HomePage() {
   return (
     <div className="p-6 max-w-7xl mx-auto pt-32">
       <h1 className="text-3xl font-bold mb-4">Movie Listings</h1>
+
       {isLoadingMovies ? (
         <Skeleton height={40} className="rounded-lg mt-2" />
       ) : (
@@ -84,9 +98,7 @@ export default function HomePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
         {isLoadingMovies
           ? Array.from({ length: 8 }).map((_, i) => <MovieCardSkeleton key={i} />)
-          : filteredMovies.map((movie, i) => (
-              <MovieCard key={movie.url || `${movie.title}-${i}`} movie={movie} />
-            ))}
+          : filteredMovies.map((movie) => <MovieCard key={movie.url} movie={movie} />)}
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ const Filters = ({ genres, selectedGenres, onFilterChange }: FiltersProps) => {
     <div className="flex gap-2 mt-4 overflow-x-auto">
       {genres.map((genre) => (
         <Button
-          key={genre.id}
+          key={genre.id ?? genre.url}
           variant={selectedGenres.includes(genre.name) ? 'default' : 'outline'}
           size="sm"
           onClick={() => toggleGenre(genre.name)}

@@ -27,7 +27,7 @@ export const mockMovies: Movie[] = [
       'Following the events of “Avengers: Endgame”, the Falcon, Sam Wilson and the Winter Soldier, Bucky Barnes team up in a global adventure that tests their abilities, and their patience',
     genre: mockGenres[0],
     image_path: 'https://image.tmdb.org/t/p/w1280/6kbAMLteGO8yyewYau6bJ683sw7.jpg',
-    url: 'the-marvels',
+    url: 'falcon-and-winter',
   },
   {
     id: '4',
@@ -36,6 +36,6 @@ export const mockMovies: Movie[] = [
       'With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe and forces that turn old friends into foes',
     genre: mockGenres[1],
     image_path: 'https://image.tmdb.org/t/p/w1280/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
-    url: 'john-wick-chapter-4',
+    url: 'john-wick-4',
   },
 ];
