@@ -87,7 +87,7 @@ class UserAccountAboutMe(generics.GenericAPIView):
     responses={
       200: OpenApiResponse(
         response=OpenApiTypes.OBJECT,
-        description="OK - login successful",
+        description="OK - user details retrieved",
         examples=[
           OpenApiExample(
             name="OK",

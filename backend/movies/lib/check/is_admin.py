@@ -4,9 +4,7 @@ from movies.models import Account
 
 
 def is_admin(account: Account) -> bool:
-  if account.role.id == 2 and account.role.name == "Admin":
-    return True
-  return False
+  return account.role.id == 2 and account.role.name == "Admin"
 
 
 class IsAdminBasePermission(BasePermission):
