@@ -69,6 +69,20 @@ class Command(BaseCommand):
       last_name="Williams",
     )
 
+    user_second_not_active = User.objects.create(
+      username="user_second_not_active",
+      email="user_second@example.com",
+    )
+    user_second_not_active.set_password('12345')
+    user_second_not_active.save()
+    user_second_not_active_account = Account.objects.create(
+      user=user_second_not_active,
+      role=role_user,
+      first_name="Julia",
+      last_name="Smitch",
+      status=0
+    )
+
     # *** END User / Account ***
 
     # ***Country***

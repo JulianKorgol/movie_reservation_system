@@ -16,7 +16,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, 
   description="User account login endpoint",
   tags=["v1", "User"]
 )
-class UserAccountLoginByPassword(generics.GenericAPIView):
+class UserAccountLoginWithPassword(generics.GenericAPIView):
   permission_classes = [AllowAny]
   serializer_class = UserAccountLoginSerializer
 
@@ -37,7 +37,7 @@ class UserAccountLoginByPassword(generics.GenericAPIView):
     ),
     401: OpenApiResponse(
       response=OpenApiTypes.OBJECT,
-      description="Incorrect credentials",
+      description="Invalid credentials",
       examples=[
         OpenApiExample(
           name="Incorrect credentials",
