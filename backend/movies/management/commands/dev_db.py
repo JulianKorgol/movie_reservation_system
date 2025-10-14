@@ -5,9 +5,10 @@ from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.auth.models import User
 
-from movies.models import Country, City, Cinema, Movie, MovieGenre, CinemaRoom, CinemaRoomRow, CinemaRoomSeat, \
-  TicketType, Showtime
+from movies.models import Role, Country, City, Cinema, Movie, MovieGenre, CinemaRoom, CinemaRoomRow, CinemaRoomSeat, \
+  TicketType, Showtime, Account
 
 
 class Command(BaseCommand):
@@ -15,6 +16,74 @@ class Command(BaseCommand):
 
   def handle(self, *args, **options):
     print("Loading development data...")
+
+    # ***User Roles***
+    Role.objects.all().delete()
+
+    role_super_admin = Role.objects.create(id=1, name="Super Admin")
+    role_admin = Role.objects.create(id=2, name="Admin")
+    role_user = Role.objects.create(id=3, name="User")
+
+    # ***END User Roles***
+
+    # ***User / Account ***
+    Account.objects.all().delete()
+    User.objects.all().delete()
+
+    user_super_admin = User.objects.create(
+      username="super_admin",
+      email="super_admin@example.com",
+    )
+    user_super_admin.set_password("1234567890")
+    user_super_admin.save()
+    user_super_admin_account = Account.objects.create(
+      user=user_super_admin,
+      role=role_super_admin,
+      first_name="Alice",
+      last_name="Johnson",
+    )
+
+    user_admin = User.objects.create(
+      username="admin",
+      email="admin@example.com",
+    )
+    user_admin.set_password("qwerty")
+    user_admin.save()
+    user_admin_account = Account.objects.create(
+      user=user_admin,
+      role=role_admin,
+      first_name="Michael",
+      last_name="Smith",
+    )
+
+    user_first = User.objects.create(
+      username="user_first",
+      email="user_first@example.com",
+    )
+    user_first.set_password('1234')
+    user_first.save()
+    user_first_account = Account.objects.create(
+      user=user_first,
+      role=role_user,
+      first_name="Sophia",
+      last_name="Williams",
+    )
+
+    user_second_not_active = User.objects.create(
+      username="user_second_not_active",
+      email="user_second@example.com",
+    )
+    user_second_not_active.set_password('12345')
+    user_second_not_active.save()
+    user_second_not_active_account = Account.objects.create(
+      user=user_second_not_active,
+      role=role_user,
+      first_name="Julia",
+      last_name="Smitch",
+      status=0
+    )
+
+    # *** END User / Account ***
 
     # ***Country***
     Country.objects.all().delete()
