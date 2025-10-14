@@ -276,53 +276,49 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                            "data": [
                              {
                                "movie": {
-                                 "title": "F1",
-                                 "description": "xxx",
-                                 "genre_url": "thriller",
-                                 "image_path": "xxx.jpg",
-                                 "url": "f1"
+                                 "title": "The Falcon and the Winter Soldier",
+                                 "description": "zzz",
+                                 "genre": {
+                                   "name": "For Kids",
+                                   "url": "for-kids"
+                                 },
+                                 "image_path": "zzz.jpg",
+                                 "url": "falcon-and-winter"
                                },
                                "showtimes": [
                                  {
-                                   "id": 2220,
-                                   "start_date": "2025-10-13T14:30:00+02:00",
-                                   "end_date": "2025-10-13T17:05:00+02:00"
+                                   "id": 7024,
+                                   "start_date": "2025-10-14T17:30:00+02:00",
+                                   "end_date": "2025-10-14T20:13:00+02:00"
+                                 },
+                                 {
+                                   "id": 6840,
+                                   "start_date": "2025-10-14T16:30:00+02:00",
+                                   "end_date": "2025-10-14T18:55:00+02:00"
                                  }
                                ]
                              },
                              {
                                "movie": {
-                                 "title": "The Fantastic 4: First Steps",
+                                 "title": "John Wick: Chapter 4",
                                  "description": "zzz",
-                                 "genre_url": "thriller",
+                                 "genre": {
+                                   "name": "Action",
+                                   "url": "action"
+                                 },
                                  "image_path": "zzz.jpg",
-                                 "url": "fantastic-4"
+                                 "url": "john-wick-4"
                                },
                                "showtimes": [
                                  {
-                                   "id": 2171,
-                                   "start_date": "2025-10-12T22:00:00+02:00",
-                                   "end_date": "2025-10-13T01:27:00+02:00"
+                                   "id": 6878,
+                                   "start_date": "2025-10-14T13:30:00+02:00",
+                                   "end_date": "2025-10-14T15:54:00+02:00"
                                  },
                                  {
-                                   "id": 2241,
-                                   "start_date": "2025-10-14T11:30:00+02:00",
-                                   "end_date": "2025-10-14T15:09:00+02:00"
-                                 },
-                                 {
-                                   "id": 2309,
-                                   "start_date": "2025-10-13T20:15:00+02:00",
-                                   "end_date": "2025-10-13T22:37:00+02:00"
-                                 },
-                                 {
-                                   "id": 2204,
-                                   "start_date": "2025-10-13T11:00:00+02:00",
-                                   "end_date": "2025-10-13T14:05:00+02:00"
-                                 },
-                                 {
-                                   "id": 2310,
-                                   "start_date": "2025-10-12T20:00:00+02:00",
-                                   "end_date": "2025-10-12T22:33:00+02:00"
+                                   "id": 6916,
+                                   "start_date": "2025-10-14T20:45:00+02:00",
+                                   "end_date": "2025-10-14T23:14:00+02:00"
                                  }
                                ]
                              }
@@ -336,7 +332,7 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                                "movie": {
                                  "title": "F1",
                                  "description": "xxx",
-                                 "genre_url": None,
+                                 "genre": None,
                                  "image_path": "xxx.jpg",
                                  "url": "f1"
                                },
@@ -358,7 +354,10 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                                "movie": {
                                  "title": "The Falcon and the Winter Soldier",
                                  "description": "zzz",
-                                 "genre_url": "action",
+                                 "genre": {
+                                   "name": "Action",
+                                   "url": "action"
+                                 },
                                  "image_path": "zzz.jpg",
                                  "url": "falcon-and-winter"
                                },
@@ -374,7 +373,10 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                                "movie": {
                                  "title": "John Wick: Chapter 4",
                                  "description": "zzz",
-                                 "genre_url": "action",
+                                 "genre": {
+                                   "name": "Action",
+                                   "url": "action"
+                                 },
                                  "image_path": "zzz.jpg",
                                  "url": "john-wick-4"
                                },
@@ -502,7 +504,10 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         "movie": {
           "title": movie.title,
           "description": movie.description,
-          "genre_url": movie.genre.url if movie.genre else None,
+          "genre": {
+            "name": movie.genre.name,
+            "url": movie.genre.url
+          } if movie.genre else None,
           "image_path": movie.image_path,
           "url": movie.url
         },
