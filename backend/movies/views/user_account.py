@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 
 from rest_framework import generics, status
@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
 from movies.serializers import UserAccountLoginSerializer
-from movies.lib.check import is_super_admin, is_admin
+from movies.lib.check import is_super_admin, is_admin, check_if_user_is_active
+from movies.models import Account
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -63,9 +64,9 @@ class UserAccountLoginWithPassword(generics.GenericAPIView):
       return Response({"error": "Missing required data: email, password", "error_code": 1},
                       status=status.HTTP_400_BAD_REQUEST)
 
-    user = User.objects.get(email=email)
-    if user.check_password(password):
-      if user.is_active:
+    user = User.objects.filter(email=email).first()
+    if user is not None and user.check_password(password):
+      if check_if_user_is_active(Account.objects.get(user=user)):
         login(request, user)
         return Response(status=status.HTTP_200_OK)
       else:
