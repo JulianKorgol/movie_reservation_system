@@ -92,18 +92,11 @@ class UserAccountAboutMe(generics.GenericAPIView):
           OpenApiExample(
             name="OK",
             value={
-              "data": {
-                "email": "example@example.com",
+              "user": {
+                "email": "xyz@example.com",
                 "first_name": "John",
-                "last_name": "XYZ",
-                "role": {
-                  "id": 3,
-                  "name": "User"
-                }
-              },
-              "privileges": {
-                "is_super_admin": False,
-                "is_admin": False
+                "last_name": "Williams",
+                "role": "User"
               }
             }
           )
@@ -128,18 +121,11 @@ class UserAccountAboutMe(generics.GenericAPIView):
 
     return Response(
       {
-        "data": {
+        "user": {
           "email": user.email,
           "first_name": user.account.first_name,
           "last_name": user.account.last_name,
-          "role": {
-            "id": user.account.role.id,
-            "name": user.account.role.name
-          }
-        },
-        "privileges": {
-          "is_super_admin": is_super_admin(user.account),
-          "is_admin": is_admin(user.account)
+          "role": user.account.role.name
         }
       }, status=status.HTTP_200_OK
     )
