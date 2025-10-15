@@ -18,7 +18,7 @@ export const mockMovies: Movie[] = [
       "Against the vibrant backdrop of a 1960s-inspired, retro-futuristic world, Marvel's First Family is forced to balance their roles as heroes with the strength of their family bond, while defending Earth from a ravenous space god called Galactus and his enigmatic Herald, Silver Surfer",
     genre: mockGenres[0],
     image_path: 'https://image.tmdb.org/t/p/w1280/cm8TNGBGG0aBfWj0LgrESHv8tir.jpg',
-    url: 'the-fantastic-4-first-steps',
+    url: 'fantastic-4',
   },
   {
     id: '3',
