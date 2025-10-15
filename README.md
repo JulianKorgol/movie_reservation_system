@@ -1,5 +1,7 @@
 # Movie Reservation System
 
+**The app is built for educational purposes only!**
+
 A web system built for cinema owners to manage movies and reservations efficiently.
 
 API docs: http://localhost:8000/docs/ (require backend running)

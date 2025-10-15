@@ -233,7 +233,7 @@ class Command(BaseCommand):
       title="F1",
       description="xxx",
       genre=movie_genre_thriller,
-      image_path="xxx.jpg",
+      image_path="https://m.media-amazon.com/images/M/MV5BNDkwNjc2OTEtYWNkNS00Mjc1LWJmMDYtYWVhNDA1MjBiYjU4XkEyXkFqcGc@._V1_FMjpg_UY4096_.jpg",
       url="f1"
     )
     movie_f1.save()
@@ -242,7 +242,7 @@ class Command(BaseCommand):
       title="The Fantastic 4: First Steps",
       description="zzz",
       genre=movie_genre_thriller,
-      image_path="zzz.jpg",
+      image_path="https://m.media-amazon.com/images/M/MV5BOGM5MzA3MDAtYmEwMi00ZDNiLTg4MDgtMTZjOTc0ZGMyNTIwXkEyXkFqcGc@._V1_FMjpg_UY1609_.jpg",
       url="fantastic-4"
     )
     movie_fantastic4.save()
@@ -251,7 +251,7 @@ class Command(BaseCommand):
       title="The Falcon and the Winter Soldier",
       description="zzz",
       genre=movie_genre_action,
-      image_path="zzz.jpg",
+      image_path="https://m.media-amazon.com/images/M/MV5BYmJkOGNlNmEtMmQyOS00YjZiLTgxM2EtNmEzNzUzNTU5ODYwXkEyXkFqcGc@._V1_FMjpg_UY2500_.jpg",
       url="falcon-and-winter"
     )
     movie_falcon_and_winter.save()
@@ -260,7 +260,7 @@ class Command(BaseCommand):
       title="John Wick: Chapter 4",
       description="zzz",
       genre=movie_genre_action,
-      image_path="zzz.jpg",
+      image_path="https://m.media-amazon.com/images/M/MV5BY2Q2ZmI5ZjUtNWVhMC00YzJkLTlmYjMtY2RmZDhkNzEzYjZhXkEyXkFqcGc@._V1_FMjpg_UY6001_.jpg",
       url="john-wick-4"
     )
     movie_john_wick_4.save()
