@@ -38,6 +38,29 @@ docker compose up
 docker compose up -d
 ```
 
+#### Credentials
+
+- Super Admin:
+
+```text
+super_admin@example.com
+1234567890
+```
+
+- Admin:
+
+```text
+admin@example.com
+qwerty
+```
+
+- First User:
+
+```text
+user_first@example.com
+1234
+```
+
 #### Backend
 
 ```bash
