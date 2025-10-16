@@ -438,19 +438,18 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
       return Response({"error_code": 4}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     if selected_date:
-      day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.min))
       day_end = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.max))
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__gte=day_start,
+        start_date__gte=datetime_now,
         end_date__lte=day_end,
       )
-
     else:
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
         start_date__range=(datetime_now, datetime_now + datetime.timedelta(days=2))
       )
+
     if not showtimes.exists():
       return Response({"error": "No showtimes found", "error_code": 3}, status=status.HTTP_404_NOT_FOUND)
 
