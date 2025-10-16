@@ -470,7 +470,7 @@ class Command(BaseCommand):
     # ***Showtimes***
     Showtime.objects.all().delete()
 
-    start_date = timezone.now().astimezone(ZoneInfo(TIME_ZONE))
+    start_date = timezone.now()
     end_date = start_date + datetime.timedelta(days=7)
     for i in range(250):
       for _ in range(10):
@@ -479,8 +479,7 @@ class Command(BaseCommand):
 
         hour = random.randint(10, 22)
         minute = random.choice([0, 15, 30, 45])
-        start_time = timezone.make_aware(datetime.datetime(date.year, date.month, date.day, hour, minute),
-                                         timezone=start_date.tzinfo)
+        start_time = timezone.make_aware(datetime.datetime(date.year, date.month, date.day, hour, minute))
 
         duration = random.randint(120, 240)
         end_time = start_time + datetime.timedelta(minutes=duration)

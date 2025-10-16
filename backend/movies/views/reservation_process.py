@@ -413,11 +413,10 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
 
     req_par_date = req.query_params.get("date")
     selected_date = None
-    datetime_now = timezone.now().astimezone(ZoneInfo(TIME_ZONE))
+    datetime_now = timezone.now()
     if req_par_date:
       try:
-        selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"),
-                                            timezone=datetime_now.tzinfo)
+        selected_date = datetime.datetime.strptime(req_par_date, "%Y-%m-%d").date()
       except ValueError:
         return Response({"error": "Parameter: date is in incorrect format", "error_code": 6},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -439,24 +438,18 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
       return Response({"error_code": 4}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     if selected_date:
+      day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.min))
+      day_end = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.max))
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__gte=timezone.make_aware(
-          datetime.datetime.combine(selected_date,
-                                    datetime_now.min.time() if selected_date.date() > datetime_now.date() else datetime_now.time()),
-          timezone=datetime_now.tzinfo),
-        end_date__lte=timezone.make_aware(datetime.datetime.combine(selected_date, datetime.datetime.max.time()),
-                                          timezone=datetime_now.tzinfo)
+        start_date__gte=day_start,
+        end_date__lte=day_end,
       )
+
     else:
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__range=(datetime_now,
-                           timezone.make_aware(
-                             datetime.datetime.combine(datetime_now.date() + datetime.timedelta(days=2),
-                                                       datetime_now.max.time()),
-                             timezone=datetime_now.tzinfo)
-                           )
+        start_date__range=(datetime_now, datetime_now + datetime.timedelta(days=2))
       )
     if not showtimes.exists():
       return Response({"error": "No showtimes found", "error_code": 3}, status=status.HTTP_404_NOT_FOUND)
