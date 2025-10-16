@@ -346,44 +346,6 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                              }
                            ]
                          }
-                       ), OpenApiExample(
-                         name="OK 3 - No showtimes",
-                         value={
-                           "data": [
-                             {
-                               "movie": {
-                                 "title": "The Falcon and the Winter Soldier",
-                                 "description": "zzz",
-                                 "genre": {
-                                   "name": "Action",
-                                   "url": "action"
-                                 },
-                                 "image_path": "zzz.jpg",
-                                 "url": "falcon-and-winter"
-                               },
-                               "showtimes": [
-                                 {
-                                   "id": 2780,
-                                   "start_date": "2025-10-12T20:15:00+02:00",
-                                   "end_date": "2025-10-12T23:07:00+02:00"
-                                 }
-                               ]
-                             },
-                             {
-                               "movie": {
-                                 "title": "John Wick: Chapter 4",
-                                 "description": "zzz",
-                                 "genre": {
-                                   "name": "Action",
-                                   "url": "action"
-                                 },
-                                 "image_path": "zzz.jpg",
-                                 "url": "john-wick-4"
-                               },
-                               "showtimes": []
-                             }
-                           ]
-                         }
                        )
                      ]
                    ),
@@ -451,7 +413,7 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
 
     req_par_date = req.query_params.get("date")
     selected_date = None
-    datetime_now = timezone.now()
+    datetime_now = timezone.now().astimezone(ZoneInfo(TIME_ZONE))
     if req_par_date:
       try:
         selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"),
@@ -479,16 +441,22 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
     if selected_date:
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__gte=datetime.datetime.combine(selected_date,
-                                                  datetime.datetime.min.time() if selected_date.date() > datetime_now.date() else datetime_now.time()),
-        end_date__lte=datetime.datetime.combine(selected_date, datetime.datetime.max.time())
+        start_date__gte=timezone.make_aware(
+          datetime.datetime.combine(selected_date,
+                                    datetime_now.min.time() if selected_date.date() > datetime_now.date() else datetime_now.time()),
+          timezone=datetime_now.tzinfo),
+        end_date__lte=timezone.make_aware(datetime.datetime.combine(selected_date, datetime.datetime.max.time()),
+                                          timezone=datetime_now.tzinfo)
       )
     else:
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
         start_date__range=(datetime_now,
-                           datetime.datetime.combine(datetime_now.date() + datetime.timedelta(days=2),
-                                                     datetime.datetime.max.time()))
+                           timezone.make_aware(
+                             datetime.datetime.combine(datetime_now.date() + datetime.timedelta(days=2),
+                                                       datetime_now.max.time()),
+                             timezone=datetime_now.tzinfo)
+                           )
       )
     if not showtimes.exists():
       return Response({"error": "No showtimes found", "error_code": 3}, status=status.HTTP_404_NOT_FOUND)
