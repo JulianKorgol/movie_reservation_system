@@ -421,8 +421,8 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         return Response({"error": "Parameter: date is in incorrect format", "error_code": 6},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-      if selected_date.date() > datetime_now.date() + datetime.timedelta(
-        days=7) or selected_date.date() < datetime_now.date():
+      if selected_date > datetime_now.date() + datetime.timedelta(
+        days=7) or selected_date < datetime_now.date():
         return Response(
           {"error": "Parameter: date should not be more than 7 days in the future or date should not be in the past.",
            "error_code": 7},
