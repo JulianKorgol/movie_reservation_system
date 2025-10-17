@@ -439,9 +439,15 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
 
     if selected_date:
       day_end = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.max))
+      
+      if selected_date > datetime_now.date():
+        day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.min))
+      else:
+        day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime_now.time()))
+
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__gte=datetime_now,
+        start_date__gte=day_start,
         end_date__lte=day_end,
       )
     else:
