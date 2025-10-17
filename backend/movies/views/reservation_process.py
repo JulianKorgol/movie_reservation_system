@@ -10,7 +10,7 @@ from django.utils import timezone
 from movies.models import Country, City, Cinema, CinemaRoom, Showtime, Movie
 from movies.lib.public_models import PublicCountry, PublicCity, PublicCinema
 from movies.lib.logs import app_logger
-from backend.settings import TIME_ZONE
+from movies.lib.enum.timezone import TimeZone
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -439,7 +439,7 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
 
     if selected_date:
       day_end = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.max))
-      
+
       if selected_date > datetime_now.date():
         day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.min))
       else:
@@ -480,8 +480,8 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         "showtimes": [
           {
             "id": showtime.id,
-            "start_date": showtime.start_date.astimezone(ZoneInfo(TIME_ZONE)),
-            "end_date": showtime.end_date.astimezone(ZoneInfo(TIME_ZONE)),
+            "start_date": showtime.start_date.astimezone(ZoneInfo(TimeZone.poland.value)),
+            "end_date": showtime.end_date.astimezone(ZoneInfo(TimeZone.poland.value)),
           }
           for showtime in showtimes if
           showtime.movie == movie and showtime.start_date > datetime_now
