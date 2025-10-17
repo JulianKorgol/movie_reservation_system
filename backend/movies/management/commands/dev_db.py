@@ -1,5 +1,6 @@
 import random
 import datetime
+from zoneinfo import ZoneInfo
 from decimal import Decimal
 
 from django.core.management.base import BaseCommand
@@ -7,6 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from backend.settings import TIME_ZONE
 from movies.models import Role, Country, City, Cinema, Movie, MovieGenre, CinemaRoom, CinemaRoomRow, CinemaRoomSeat, \
   TicketType, Showtime, Account
 
@@ -468,7 +470,7 @@ class Command(BaseCommand):
     # ***Showtimes***
     Showtime.objects.all().delete()
 
-    start_date = timezone.make_aware(datetime.datetime.now())
+    start_date = timezone.now()
     end_date = start_date + datetime.timedelta(days=7)
     for i in range(250):
       for _ in range(10):

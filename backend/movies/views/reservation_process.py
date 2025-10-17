@@ -10,7 +10,7 @@ from django.utils import timezone
 from movies.models import Country, City, Cinema, CinemaRoom, Showtime, Movie
 from movies.lib.public_models import PublicCountry, PublicCity, PublicCinema
 from movies.lib.logs import app_logger
-from backend.settings import TIME_ZONE
+from movies.lib.enum.timezone import TimeZone
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiTypes, OpenApiExample, OpenApiParameter
 
@@ -346,44 +346,6 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
                              }
                            ]
                          }
-                       ), OpenApiExample(
-                         name="OK 3 - No showtimes",
-                         value={
-                           "data": [
-                             {
-                               "movie": {
-                                 "title": "The Falcon and the Winter Soldier",
-                                 "description": "zzz",
-                                 "genre": {
-                                   "name": "Action",
-                                   "url": "action"
-                                 },
-                                 "image_path": "zzz.jpg",
-                                 "url": "falcon-and-winter"
-                               },
-                               "showtimes": [
-                                 {
-                                   "id": 2780,
-                                   "start_date": "2025-10-12T20:15:00+02:00",
-                                   "end_date": "2025-10-12T23:07:00+02:00"
-                                 }
-                               ]
-                             },
-                             {
-                               "movie": {
-                                 "title": "John Wick: Chapter 4",
-                                 "description": "zzz",
-                                 "genre": {
-                                   "name": "Action",
-                                   "url": "action"
-                                 },
-                                 "image_path": "zzz.jpg",
-                                 "url": "john-wick-4"
-                               },
-                               "showtimes": []
-                             }
-                           ]
-                         }
                        )
                      ]
                    ),
@@ -454,14 +416,13 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
     datetime_now = timezone.now()
     if req_par_date:
       try:
-        selected_date = timezone.make_aware(datetime.datetime.strptime(req_par_date, "%Y-%m-%d"),
-                                            timezone=datetime_now.tzinfo)
+        selected_date = datetime.datetime.strptime(req_par_date, "%Y-%m-%d").date()
       except ValueError:
         return Response({"error": "Parameter: date is in incorrect format", "error_code": 6},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-      if selected_date.date() > datetime_now.date() + datetime.timedelta(
-        days=7) or selected_date.date() < datetime_now.date():
+      if selected_date > datetime_now.date() + datetime.timedelta(
+        days=7) or selected_date < datetime_now.date():
         return Response(
           {"error": "Parameter: date should not be more than 7 days in the future or date should not be in the past.",
            "error_code": 7},
@@ -477,19 +438,24 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
       return Response({"error_code": 4}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     if selected_date:
+      day_end = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.max))
+
+      if selected_date > datetime_now.date():
+        day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime.time.min))
+      else:
+        day_start = timezone.make_aware(datetime.datetime.combine(selected_date, datetime_now.time()))
+
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__gte=datetime.datetime.combine(selected_date,
-                                                  datetime.datetime.min.time() if selected_date.date() > datetime_now.date() else datetime_now.time()),
-        end_date__lte=datetime.datetime.combine(selected_date, datetime.datetime.max.time())
+        start_date__gte=day_start,
+        end_date__lte=day_end,
       )
     else:
       showtimes = Showtime.objects.filter(
         cinema_room__in=cinema_rooms,
-        start_date__range=(datetime_now,
-                           datetime.datetime.combine(datetime_now.date() + datetime.timedelta(days=2),
-                                                     datetime.datetime.max.time()))
+        start_date__range=(datetime_now, datetime_now + datetime.timedelta(days=2))
       )
+
     if not showtimes.exists():
       return Response({"error": "No showtimes found", "error_code": 3}, status=status.HTTP_404_NOT_FOUND)
 
@@ -514,8 +480,8 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
         "showtimes": [
           {
             "id": showtime.id,
-            "start_date": showtime.start_date.astimezone(ZoneInfo(TIME_ZONE)),
-            "end_date": showtime.end_date.astimezone(ZoneInfo(TIME_ZONE)),
+            "start_date": showtime.start_date.astimezone(ZoneInfo(TimeZone.poland.value)),
+            "end_date": showtime.end_date.astimezone(ZoneInfo(TimeZone.poland.value)),
           }
           for showtime in showtimes if
           showtime.movie == movie and showtime.start_date > datetime_now
