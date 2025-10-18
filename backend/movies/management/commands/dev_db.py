@@ -138,7 +138,7 @@ class Command(BaseCommand):
 
     ticket_type_poland_vip = TicketType.objects.create(
       country=country_first,
-      name="Discounted Ticket",
+      name="VIP Ticket",
       price=Decimal("40.00"),
       currency="PLN",
       primary_ticket=ticket_type_poland_normal,
@@ -372,7 +372,7 @@ class Command(BaseCommand):
       cinema=cinema_warsaw_second,
     )
     generate_seats_for_room(
-      cinema_room=room_first,
+      cinema_room=room_waw2_first,
       number_of_seats_per_row=10,
       number_of_normal_rows=6,
       number_of_vip_rows=1,
@@ -386,7 +386,7 @@ class Command(BaseCommand):
       cinema=cinema_warsaw_second,
     )
     generate_seats_for_room(
-      cinema_room=room_second,
+      cinema_room=room_waw2_second,
       number_of_seats_per_row=14,
       number_of_normal_rows=10,
       number_of_vip_rows=1,
@@ -400,7 +400,7 @@ class Command(BaseCommand):
       cinema=cinema_warsaw_second,
     )
     generate_seats_for_room(
-      cinema_room=room_third,
+      cinema_room=room_waw2_third,
       number_of_seats_per_row=10,
       number_of_normal_rows=4,
       number_of_vip_rows=3,
@@ -414,7 +414,7 @@ class Command(BaseCommand):
       cinema=cinema_lublin_first,
     )
     generate_seats_for_room(
-      cinema_room=room_second,
+      cinema_room=room_fourth,
       number_of_seats_per_row=14,
       number_of_normal_rows=11,
       number_of_vip_rows=2,

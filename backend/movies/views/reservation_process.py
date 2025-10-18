@@ -7,7 +7,8 @@ from rest_framework.response import Response
 
 from django.utils import timezone
 
-from movies.models import Country, City, Cinema, CinemaRoom, Showtime, Movie
+from movies.models import Country, City, Cinema, CinemaRoom, Showtime, Movie, CinemaRoomRow, CinemaRoomSeat, TicketType, \
+  Reservation, ReservationTicket
 from movies.lib.public_models import PublicCountry, PublicCity, PublicCinema
 from movies.lib.logs import app_logger
 from movies.lib.enum.timezone import TimeZone
@@ -491,3 +492,224 @@ class ReservationProcessShowtimeSelection(generics.GenericAPIView):
     ]
 
     return Response({"data": response}, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+  summary="Showtime Data",
+  description="All data needed to start seat selection process.",
+  tags=["v1", "ReservationProcess"],
+)
+class ReservationProcessShowtimeData(generics.GenericAPIView):
+  permission_classes = [AllowAny]
+
+  @extend_schema(
+    parameters=[OpenApiParameter(
+      name="showtime_id",
+      type=OpenApiTypes.INT,
+      description="Selected showtime",
+      required=True
+    )],
+    responses={
+      200: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        examples=[OpenApiExample(
+          name="OK",
+          value={
+            "cinema": {
+              "name": "Złote Tarasy",
+              "url": "zlote-tarasy"
+            },
+            "movie": {
+              "title": "F1",
+              "url": "f1"
+            },
+            "showtime": {
+              "start_date": "2025-10-19T23:45:00+02:00",
+              "end_date": "2025-10-20T03:22:00+02:00"
+            },
+            "cinema_room": {
+              "name": "Room 2",
+              "rows_and_seats": [
+                {
+                  "row_number": 1,
+                  "seats": [
+                    {
+                      "id": 93141,
+                      "seat_number": 1,
+                      "is_available": True,
+                      "ticket_type": 187
+                    },
+                    {
+                      "id": 93148,
+                      "seat_number": 2,
+                      "is_available": False,
+                      "ticket_type": 187
+                    }
+                  ]
+                },
+                {
+                  "row_number": 2,
+                  "seats": [
+                    {
+                      "id": 93155,
+                      "seat_number": 1,
+                      "is_available": False,
+                      "ticket_type": 189
+                    },
+                    {
+                      "id": 93156,
+                      "seat_number": 2,
+                      "is_available": True,
+                      "ticket_type": 189
+                    }
+                  ]
+                },
+                {
+                  "row_number": 3,
+                  "seats": [
+                    {
+                      "id": 93169,
+                      "seat_number": 1,
+                      "is_available": True,
+                      "ticket_type": 187
+                    },
+                    {
+                      "id": 93176,
+                      "seat_number": 2,
+                      "is_available": True,
+                      "ticket_type": 187
+                    },
+                    {
+                      "id": 93177,
+                      "seat_number": 3,
+                      "is_available": False,
+                      "ticket_type": 187
+                    }
+                  ]
+                }
+              ]
+            },
+            "ticket_types": [
+              {
+                "id": 187,
+                "name": "Normal Ticket",
+                "price": 27,
+                "currency": "PLN",
+                "primary_ticket": None,
+                "discount_percentage": None
+              },
+              {
+                "id": 188,
+                "name": "Discounted Ticket",
+                "price": None,
+                "currency": "PLN",
+                "primary_ticket": 187,
+                "discount_percentage": 37
+              },
+              {
+                "id": 189,
+                "name": "VIP Ticket",
+                "price": 40,
+                "currency": "PLN",
+                "primary_ticket": 187,
+                "discount_percentage": None
+              }
+            ]
+          }
+        )
+        ]
+      ),
+      400: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        examples=[
+          OpenApiExample(
+            name="Missing showtime_id",
+            value={"error": "Missing required parameter: showtime_id in int format", "error_code": 1},
+          )
+        ]
+      ),
+      404: OpenApiResponse(
+        response=OpenApiTypes.OBJECT,
+        examples=[
+          OpenApiExample(
+            name="Showtime not found",
+            value={"error": "Showtime not found", "error_code": 2}
+          )
+        ]
+      )
+    }
+  )
+  def get(self, request) -> Response:
+    showtime_id = request.query_params.get("showtime_id")
+    if not showtime_id or not showtime_id.isdigit():
+      return Response({"error": "Missing required parameter: showtime_id in int format", "error_code": 1},
+                      status=status.HTTP_400_BAD_REQUEST)
+
+    showtime = Showtime.objects.filter(id=showtime_id).first()
+    if not showtime:
+      return Response({"error": "Showtime not found", "error_code": 2}, status=status.HTTP_404_NOT_FOUND)
+
+    cinema_room_rows = CinemaRoomRow.objects.filter(cinema_room=showtime.cinema_room)
+    cinema_room_seats = CinemaRoomSeat.objects.filter(row__in=cinema_room_rows.values_list("id", flat=True))
+
+    ticket_types = []
+    ticket_type_primary_ticket = TicketType.objects.filter(
+      id__in=cinema_room_seats.values_list("seat_type_id", flat=True), primary_ticket=None).first()
+    ticket_types.append(ticket_type_primary_ticket)
+
+    ticket_types_with_primary_ticket = TicketType.objects.filter(primary_ticket=ticket_type_primary_ticket)
+    for ticket_type in ticket_types_with_primary_ticket:
+      ticket_types.append(ticket_type)
+
+    if not ticket_types:
+      app_logger.error(
+        f"No ticket types found for {showtime_id} (ReservationProcessShowtimeData; 3)"
+      )
+      return Response({"error_code": 3}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    already_reserved_seats = ReservationTicket.objects.filter(
+      reservation__showtime=showtime
+    ).values_list("cinema_room_seat_id", flat=True)
+
+    return Response({
+      "cinema": {
+        "name": showtime.cinema_room.cinema.name,
+        "url": showtime.cinema_room.cinema.url,
+      },
+      "movie": {
+        "title": showtime.movie.title,
+        "url": showtime.movie.url,
+      },
+      "showtime": {
+        "start_date": showtime.start_date.astimezone(ZoneInfo(TimeZone.poland.value)),
+        "end_date": showtime.end_date.astimezone(ZoneInfo(TimeZone.poland.value)),
+      },
+      "cinema_room": {
+        "name": showtime.cinema_room.name,
+        "rows_and_seats": [
+          {
+            "row_number": cinema_room_row.row_number,
+            "seats": [
+              {
+                "id": cinema_room_seat.id,
+                "seat_number": cinema_room_seat.seat_number,
+                "is_available": (cinema_room_seat.status == 1) and (cinema_room_seat.id not in already_reserved_seats),
+                "ticket_type": cinema_room_seat.seat_type.id,
+              }
+              for cinema_room_seat in cinema_room_seats if cinema_room_seat.row == cinema_room_row
+            ]
+          } for cinema_room_row in cinema_room_rows
+        ]
+      },
+      "ticket_types": [
+        {
+          "id": ticket_type.id,
+          "name": ticket_type.name,
+          "price": ticket_type.price,
+          "currency": ticket_type.currency,
+          "primary_ticket": ticket_type.primary_ticket.id if ticket_type.primary_ticket else None,
+          "discount_percentage": ticket_type.discount_percentage if ticket_type.discount_percentage else None,
+        }
+        for ticket_type in ticket_types
+      ],
+    }, status=status.HTTP_200_OK)

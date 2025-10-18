@@ -14,4 +14,5 @@ urlpatterns = [
   path('user/me', user_account.UserAccountAboutMe.as_view()),
   path('user/privileges', user_account.UserAccountPrivileges.as_view()),
   path('user/logout', user_account.UserAccountLogOut.as_view()),
+  path('reservation/showtime', reservation_process.ReservationProcessShowtimeData.as_view()),
 ]
