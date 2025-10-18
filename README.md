@@ -167,15 +167,14 @@ Flow steps:
 - User selects a movie → shows all available showtimes (with date, time).
   - User should be able to see movie list with showtimes on one page.
 
-3. Select ticket type and seat
+3. Choose seats
 
-- User chooses desired number and type of tickets (Standard, VIP, Student, etc.).
 - Seat map is displayed for chosen showtime.
 - User selects seats on the map.
   - Backend should lock (hold) these seats temporarily to prevent over-booking.
   - Backend returns a temporary reservation token
 
-4. Review reservation summary
+4. Review reservation summary (also select ticket type)
 
 - User reviews selected movie, showtime, seats, ticket type, and price breakdown.
 - Option to go back and modify selection.
