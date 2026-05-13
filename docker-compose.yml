@@ -150,9 +150,10 @@ services:
   postgres-iam:
     image: postgres:18-alpine
     # Postgres drops privileges internally; it needs SETUID/SETGID to do so.
-    # DAC_READ_SEARCH is required for WAL archiving and file access.
+    # CHOWN is required so the official entrypoint can fix ownership on a new
+    # data volume before initialization; DAC_READ_SEARCH is retained for file access.
     cap_drop: [ALL]
-    cap_add: [SETUID, SETGID, DAC_READ_SEARCH]
+    cap_add: [CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
     security_opt:
       - no-new-privileges:true
     networks:
