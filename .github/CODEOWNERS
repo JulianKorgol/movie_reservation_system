@@ -1,0 +1,16 @@
+# Backend
+/backend/ @JulianKorgol
+
+# Docs
+/docs/ @JulianKorgol
+README.md @JulianKorgol
+LICENSE @JulianKorgol
+
+# Docker
+docker-compose.yml @JulianKorgol
+
+# Nginx
+/nginx/ @JulianKorgol
+
+# GitHub
+/.github/ @JulianKorgol

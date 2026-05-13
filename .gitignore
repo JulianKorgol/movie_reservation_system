@@ -1,0 +1,187 @@
+# ────────────────────────────────────────────────────────────
+#  SECRETS & ENVIRONMENT  (most important — never commit these)
+# ────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.*.example
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets/
+.secrets/
+
+
+# ────────────────────────────────────────────────────────────
+#  macOS
+# ────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+*.icloud
+
+
+# ────────────────────────────────────────────────────────────
+#  Python  (Django · FastAPI · Celery)
+# ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+nosetests.xml
+pytest.xml
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+.pytype/
+
+# Django specifics
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+mediafiles/
+/static/
+/media/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Profiling
+*.prof
+
+
+# ────────────────────────────────────────────────────────────
+#  Node.js / Next.js
+# ────────────────────────────────────────────────────────────
+node_modules/
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.pnp.*
+
+# Next.js build output
+.next/
+out/
+
+# Vercel
+.vercel
+
+# Testing
+coverage/
+.nyc_output/
+
+# Turbopack / Webpack cache
+.turbo/
+.cache/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+
+# ────────────────────────────────────────────────────────────
+#  Docker
+# ────────────────────────────────────────────────────────────
+# Never commit real override files (may contain passwords)
+docker-compose.override.yml
+docker-compose.prod.yml
+
+# Local volume data mounted from host
+.docker-volumes/
+postgres-data/
+rabbitmq-data/
+redis-data/
+
+
+# ────────────────────────────────────────────────────────────
+#  Service env files (envs/ directory)
+#  Only .example files are committed; real files stay local.
+# ────────────────────────────────────────────────────────────
+envs/.env.*
+!envs/.env.*.example
+
+
+# ────────────────────────────────────────────────────────────
+#  RabbitMQ
+# ────────────────────────────────────────────────────────────
+rabbitmq/mnesia/
+rabbitmq/.erlang.cookie
+
+
+# ────────────────────────────────────────────────────────────
+#  Editors & IDEs
+# ────────────────────────────────────────────────────────────
+# VS Code — keep shared settings, ignore personal/machine ones
+.vscode/
+*.code-workspace
+
+# JetBrains (PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*#
+.#*
+
+
+# ────────────────────────────────────────────────────────────
+#  OS & misc
+# ────────────────────────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.tmp
+*.temp
+*.orig
+*.rej
+*.patch
