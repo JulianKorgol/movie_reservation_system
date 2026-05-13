@@ -1,0 +1,90 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.dev.yml — DEVELOPMENT OVERLAY
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# This file ONLY overrides what differs in development.
+# It never duplicates service definitions that don't change.
+#
+# What changes in dev:
+#   • Build target → development stage (hot-reload)
+#   • Command → dev server for each service
+#   • Source bind-mounts so edits appear instantly without rebuilds
+#   • read_only: false + no tmpfs (bind mounts need write access)
+#   • Relaxed resource limits (dev machines have more headroom)
+#   • PostgreSQL exposed on localhost for GUI clients (DBeaver, DataGrip, etc.)
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: cinema-reservation
+
+services:
+
+  # ── NGINX — no changes needed in dev ─────────────────────────────────────
+  # nginx is intentionally omitted; the base definition is used as-is.
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  AUTH SERVICE — Django runserver with auto-reload                       │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  microservice_iam:
+    build:
+      context: ./backend/microservice_iam
+      dockerfile: Dockerfile
+      target: development
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      # Bind-mount source so code changes appear without rebuilding the image
+      - ./backend/microservice_iam:/app
+    environment:
+      # Safe to set non-secret dev overrides inline; secrets still come from env_file
+      - DJANGO_DEBUG=true
+    read_only: false
+    tmpfs: []
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.00"
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  FRONTEND — Next.js dev server with HMR                                 │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  frontend-main-app:
+    build:
+      context: ./frontend/frontend_main_app
+      dockerfile: Dockerfile
+      target: development
+    command: ["npm", "run", "dev"]
+    volumes:
+      # Source mount — changes visible immediately
+      - ./frontend/frontend_main_app:/app
+      # Preserve the container's node_modules; do not overwrite with host copy
+      - frontend-main-app-node-modules:/app/node_modules
+    environment:
+      # Required on macOS: Next.js file-system polling instead of inotify
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+    read_only: false
+    tmpfs: []
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "2.00"
+
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  POSTGRES IAM — expose on localhost:5433 for GUI clients                │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  postgres-iam:
+    # Expose on 127.0.0.1 only — never 0.0.0.0
+    ports:
+      - "127.0.0.1:5433:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.00"
+
+# ── Named volume for node_modules (prevents host bind-mount from wiping it) ──
+volumes:
+  frontend-main-app-node-modules:

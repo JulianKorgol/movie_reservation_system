@@ -134,6 +134,14 @@ redis-data/
 
 
 # ────────────────────────────────────────────────────────────
+#  Service env files (envs/ directory)
+#  Only .example files are committed; real files stay local.
+# ────────────────────────────────────────────────────────────
+envs/.env.*
+!envs/.env.*.example
+
+
+# ────────────────────────────────────────────────────────────
 #  RabbitMQ
 # ────────────────────────────────────────────────────────────
 rabbitmq/mnesia/
