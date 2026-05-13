@@ -36,7 +36,9 @@ FROM deps AS builder
 COPY --chown=nextjs:nodejs . .
 USER nextjs
 
+ARG NEXT_PUBLIC_API_BASE_URL=http://localhost/iam/v1
 ENV NODE_ENV=production
+ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
 
 RUN npm run build
 

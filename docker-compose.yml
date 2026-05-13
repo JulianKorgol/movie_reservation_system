@@ -108,8 +108,8 @@ services:
           cpus: "0.50"
     restart: unless-stopped
     healthcheck:
-      # curl is installed in the Dockerfile — any HTTP response = healthy
-      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/ | grep -qE '^[2-5]'"]
+      # curl is installed in the Dockerfile — require a successful response
+      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/ | grep -qE '^2[0-9]{2}$'"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -123,6 +123,9 @@ services:
       context: ./frontend/frontend_main_app
       dockerfile: Dockerfile
       target: production
+      args:
+        # NEXT_PUBLIC_* values are embedded by Next.js at build time.
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost/iam/v1}
     <<: *app-hardening
     networks:
       - backend-net
@@ -137,8 +140,8 @@ services:
           cpus: "1.00"
     restart: unless-stopped
     healthcheck:
-      # curl is installed in the Dockerfile
-      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:3000/ | grep -qE '^[2-5]'"]
+      # curl is installed in the Dockerfile — require a successful response
+      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:3000/ | grep -qE '^2[0-9]{2}$'"]
       interval: 30s
       timeout: 10s
       retries: 3
