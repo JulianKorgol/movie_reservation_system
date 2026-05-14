@@ -8,7 +8,7 @@
 #   envs/.env.frontend-main-app   ← envs/.env.frontend-main-app.example
 #
 # Security model
-#   • backend-net is internal: true — no outbound internet from containers
+#   • backend-net is internal: true — no outbound internet from containers --this setting is disabled
 #   • Only nginx has a published port (80)
 #   • Every container: cap_drop ALL, no-new-privileges, user 1001:1001
 #   • App containers: read_only filesystem + tmpfs for writable scratch space
@@ -16,11 +16,11 @@
 #   • Secrets only via env_file — never inline in environment: blocks
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: cinema-reservation
+name: movie_reservation_system
 
 # ── Reusable security fragments ───────────────────────────────────────────────
 
-# Applied to EVERY container
+# Applied to almost all containers
 x-security-defaults: &security-defaults
   cap_drop: [ALL]
   security_opt:
@@ -44,19 +44,14 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    # NET_BIND_SERVICE lets UID 1001 bind port 80 without running as root
     cap_drop: [ALL]
-    cap_add: [NET_BIND_SERVICE]
+    cap_add:
+      - NET_BIND_SERVICE
+      - CHOWN
+      - SETUID
+      - SETGID
     security_opt:
       - no-new-privileges:true
-    user: "1001:1001"
-    read_only: true
-    tmpfs:
-      # /var/cache/nginx — proxy temp files and buffers
-      - /var/cache/nginx:size=64m,uid=1001,gid=1001,noexec,nosuid
-      # /var/run — nginx.pid
-      - /var/run:size=8m,uid=1001,gid=1001,noexec,nosuid
-      - /tmp:size=32m,uid=1001,gid=1001,noexec,nosuid
     ports:
       - "80:80"         # THE ONLY published port in the entire stack
     networks:
@@ -69,6 +64,10 @@ services:
         condition: service_healthy
       frontend-main-app:
         condition: service_healthy
+    tmpfs:
+      - /var/cache/nginx:size=64m,noexec,nosuid
+      - /var/run:size=8m,noexec,nosuid
+      - /tmp:size=32m,noexec,nosuid
     deploy:
       resources:
         limits:
@@ -156,7 +155,7 @@ services:
     # CHOWN is required so the official entrypoint can fix ownership on a new
     # data volume before initialization; DAC_READ_SEARCH is retained for file access.
     cap_drop: [ALL]
-    cap_add: [CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
+    cap_add: [FOWNER, CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
     security_opt:
       - no-new-privileges:true
     networks:
@@ -186,7 +185,7 @@ networks:
     driver: bridge
     # internal: true means containers cannot make outbound internet calls.
     # All external traffic must enter through nginx on port 80.
-    internal: true
+    #internal: true
 
 # ── Volumes ───────────────────────────────────────────────────────────────────
 volumes:
