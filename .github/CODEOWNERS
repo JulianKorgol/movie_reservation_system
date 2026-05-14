@@ -14,3 +14,6 @@ docker-compose.yml @JulianKorgol
 
 # GitHub
 /.github/ @JulianKorgol
+
+# General
+Makefile @JulianKorgol
