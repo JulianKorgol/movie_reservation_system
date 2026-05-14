@@ -16,7 +16,7 @@
 #   • PostgreSQL exposed on localhost for GUI clients (DBeaver, DataGrip, etc.)
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: cinema-reservation
+name: movie-reservation-system
 
 services:
 
