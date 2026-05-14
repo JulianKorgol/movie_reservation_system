@@ -20,7 +20,7 @@ name: movie_reservation_system
 
 # ── Reusable security fragments ───────────────────────────────────────────────
 
-# Applied to EVERY container
+# Applied to almost all containers
 x-security-defaults: &security-defaults
   cap_drop: [ALL]
   security_opt:
