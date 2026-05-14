@@ -8,7 +8,7 @@
 #   envs/.env.frontend-main-app   ← envs/.env.frontend-main-app.example
 #
 # Security model
-#   • backend-net is internal: true — no outbound internet from containers
+#   • backend-net is internal: true — no outbound internet from containers --this setting is disabled
 #   • Only nginx has a published port (80)
 #   • Every container: cap_drop ALL, no-new-privileges, user 1001:1001
 #   • App containers: read_only filesystem + tmpfs for writable scratch space
@@ -186,7 +186,7 @@ networks:
     driver: bridge
     # internal: true means containers cannot make outbound internet calls.
     # All external traffic must enter through nginx on port 80.
-    internal: true
+    #internal: true
 
 # ── Volumes ───────────────────────────────────────────────────────────────────
 volumes:
