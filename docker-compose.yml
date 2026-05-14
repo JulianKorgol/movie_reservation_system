@@ -16,7 +16,7 @@
 #   • Secrets only via env_file — never inline in environment: blocks
 # ─────────────────────────────────────────────────────────────────────────────
 
-name: cinema-reservation
+name: movie_reservation_system
 
 # ── Reusable security fragments ───────────────────────────────────────────────
 
