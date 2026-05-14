@@ -1,4 +1,4 @@
-# 🎬 Cinema Reservation System
+# 🎬 Movie Reservation System
 
 A cinema reservation system built using a microservices architecture and based on: [Roadmap Task](https://roadmap.sh/projects/movie-reservation-system)
 
