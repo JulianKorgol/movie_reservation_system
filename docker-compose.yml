@@ -156,7 +156,7 @@ services:
     # CHOWN is required so the official entrypoint can fix ownership on a new
     # data volume before initialization; DAC_READ_SEARCH is retained for file access.
     cap_drop: [ALL]
-    cap_add: [CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
+    cap_add: [FOWNER, CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
     security_opt:
       - no-new-privileges:true
     networks:
@@ -166,7 +166,7 @@ services:
       # Create from: envs/.env.postgres-iam.example
       - ./envs/.env.postgres-iam
     volumes:
-      - postgres-iam-data:/var/lib/postgresql/data
+      - postgres-iam-data:/var/lib/postgresql
     deploy:
       resources:
         limits:
