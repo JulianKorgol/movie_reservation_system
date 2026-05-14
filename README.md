@@ -9,8 +9,6 @@ A cinema reservation system built using a microservices architecture and based o
 - [Getting Started](#getting-started)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Guidelines](#pull-request-guidelines)
-- [PR Template](#pr-template)
-- [Bug Fix Template](#bug-fix-template)
 
 ---
 
