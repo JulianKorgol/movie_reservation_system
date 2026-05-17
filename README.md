@@ -14,6 +14,8 @@ A cinema reservation system built using a microservices architecture and based o
 
 ## Getting Started
 
+### Backend, Frontend, Others
+
 ```bash
 # Clone the repository
 git clone https://github.com/JulianKorgol/movie_reservation_system.git
@@ -27,6 +29,29 @@ cp envs/.env.frontend-main-app.example envs/.env.frontend-main-app
 
 # Start in development mode
 make dev
+```
+
+### Mobile
+
+To run mobile application, first prepare Your enviroment with docs: [flutter docs](https://docs.flutter.dev/install/quick)
+
+Remember to have Xcode installed [Xcode App Store link](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
+
+To run project use the command below:
+
+```bash
+make dev-mobile
+```
+
+#### Mobile requirements
+
+```bash
+# Flutter version
+flutter doctor
+3.41.9
+
+# Xcode
+26.5
 ```
 
 ---
