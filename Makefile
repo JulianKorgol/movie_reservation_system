@@ -38,6 +38,8 @@ dev-down:
 dev-clean:
 	$(COMPOSE_DEV) down -v --remove-orphans
 
+dev-mobile:
+	cd mobile/mobile_main_app; open -a Simulator; sleep 5; flutter run
 
 # ── Production simulation (no dev overrides) ─────────────────
  

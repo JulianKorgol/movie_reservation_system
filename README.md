@@ -62,6 +62,7 @@ type[scope]: short description
 
 | Scope      | What it covers                                               |
 | ---------- | ------------------------------------------------------------ |
+| `mobile`   | Mobile application (Flutter)                                 |
 | `frontend` | Next.js applications                                         |
 | `backend`  | Any backend microservice (use with service name if specific) |
 
