@@ -10,13 +10,17 @@ COMPOSE_DEV  = docker compose -f docker-compose.yml -f docker-compose.dev.yml
 
 help:
 	@echo ""
-	@echo "  Cinema Reservation System"
+	@echo "  Movie Reservation System"
 	@echo ""
 	@echo "  Dev"
-	@echo "    make dev            Start all services (attached, shows logs)"
-	@echo "    make dev-build      Start all services and rebuild images"
-	@echo "    make dev-down       Stop all services"
-	@echo "    make dev-clean      Stop all services and wipe volumes"
+	@echo "    make dev            Start docker services (attached, shows logs)"
+	@echo "    make dev-build      Start docker services and rebuild images"
+	@echo "    make dev-down       Stop docker services"
+	@echo "    make dev-clean      Stop docker services and wipe volumes"
+	@echo "    make dev-mobile-ios Run Flutter on MacOS with emulator"
+	@echo ""
+	@echo "  MacOS / iOS"
+	@echo "    make ios-stop-emulator     Stop iOS emulator on MacOS"
 	@echo ""
 	@echo "  Production (simulation)"
 	@echo "    make prod-build     Build production images"
@@ -38,8 +42,14 @@ dev-down:
 dev-clean:
 	$(COMPOSE_DEV) down -v --remove-orphans
 
-dev-mobile:
+# ── Dev mobile lifecycle ───────────────────────────────────── 
+
+dev-mobile-ios:
 	cd mobile/mobile_main_app; open -a Simulator; sleep 5; flutter run
+
+ios-stop-emulator:
+	xcrun simctl shutdown all && killall "Simulator"
+	
 
 # ── Production simulation (no dev overrides) ─────────────────
  
