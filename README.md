@@ -31,6 +31,8 @@ cp envs/.env.frontend-main-app.example envs/.env.frontend-main-app
 make dev
 ```
 
+[Documentation list](./docs/README.md)
+
 ### Mobile App
 
 To run mobile application, first prepare your enviroment with docs: [flutter docs](https://docs.flutter.dev/install/quick)
