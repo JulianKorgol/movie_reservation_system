@@ -18,7 +18,6 @@ from django.core.mail.backends import console
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     'iam',
     'drf_spectacular'
 ]
+AUTH_USER_MODEL = 'iam.User'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -76,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'microservice_iam.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -90,7 +89,6 @@ DATABASES = {
         'PORT': getenv('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -110,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -121,7 +118,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -173,7 +169,7 @@ LOGGING = {
         "iam_event_file": {
             "class": "logging.handlers.RotatingFileHandler",
             "filename": BASE_DIR / "logs" / "iam_events.log",
-            "maxBytes": 1024 * 1024 * 10, # 10 MB
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
             "backupCount": 5,
             "formatter": "verbose",
             "level": "DEBUG" if DEBUG else "INFO",
@@ -217,16 +213,16 @@ SESSION_COOKIE_NAME = "isfdntr93u"
 
 # Django Rest Framework Settings
 REST_FRAMEWORK = {
-  'DEFAULT_RENDERER_CLASSES': (
-    'rest_framework.renderers.JSONRenderer',
-  ),
-  'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # Swagger API Docs Settings
 SPECTACULAR_SETTINGS = {
-  'TITLE': 'Movie Reservation System API',
-  'DESCRIPTION': 'API Docs',
-  'VERSION': '1.0.0',
-  'SERVE_INCLUDE_SCHEMA': False,
+    'TITLE': 'Movie Reservation System API',
+    'DESCRIPTION': 'API Docs',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
