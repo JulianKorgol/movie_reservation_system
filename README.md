@@ -1,12 +1,14 @@
 # 🎬 Movie Reservation System
 
-A cinema reservation system built using a microservices architecture and based on: [Roadmap Task](https://roadmap.sh/projects/movie-reservation-system)
+A cinema reservation system built using a microservices architecture and based
+on: [Roadmap Task](https://roadmap.sh/projects/movie-reservation-system)
 
 ---
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Docs](#docs)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Guidelines](#pull-request-guidelines)
 
@@ -31,9 +33,12 @@ cp envs/.env.frontend-main-app.example envs/.env.frontend-main-app
 make dev
 ```
 
+[Documentation list](./docs/README.md)
+
 ### Mobile App
 
-To run mobile application, first prepare your enviroment with docs: [flutter docs](https://docs.flutter.dev/install/quick)
+To run mobile application, first prepare your environment with
+docs: [flutter docs](https://docs.flutter.dev/install/quick)
 
 Remember to have Xcode installed: [Xcode App Store link](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
 
@@ -60,6 +65,19 @@ flutter doctor
 
 ---
 
+## Docs
+
+Documentation can be found in the /docs/ folder.
+[Documentation list](./docs/README.md)
+
+### API Docs
+
+Every microservice has a Swagger-generated API documentation page:
+
+- [IAM Microservice Swagger Docs](http://localhost/api/iam/admin/docs/)
+
+---
+
 ## Commit Guidelines
 
 This project follows [Conventional Commits](https://www.conventionalcommits.org/).
@@ -76,7 +94,7 @@ type[scope]: short description
 ### Types
 
 | Type       | When to use                                              |
-| ---------- | -------------------------------------------------------- |
+|------------|----------------------------------------------------------|
 | `feat`     | A new feature visible to users or other services         |
 | `fix`      | A bug fix                                                |
 | `chore`    | Maintenance, tooling, config — no production code change |
@@ -90,7 +108,7 @@ type[scope]: short description
 ### Scopes
 
 | Scope      | What it covers                                               |
-| ---------- | ------------------------------------------------------------ |
+|------------|--------------------------------------------------------------|
 | `mobile`   | Mobile application (Flutter)                                 |
 | `frontend` | Next.js applications                                         |
 | `backend`  | Any backend microservice (use with service name if specific) |
@@ -98,7 +116,7 @@ type[scope]: short description
 #### Example scopes
 
 | Scope          | What it covers                        |
-| -------------- | ------------------------------------- |
+|----------------|---------------------------------------|
 | `iam`          | Auth / identity microservice (Django) |
 | `cinema`       | Cinema microservice (FastAPI)         |
 | `movie`        | Movie microservice (FastAPI)          |
@@ -170,11 +188,26 @@ docs/readme-commit-guidelines
 
 ### PR size
 
-Keep PRs focused and small. A PR that changes one thing is reviewed faster and is easier to revert if something goes wrong. If a feature needs multiple services changed, consider splitting into:
+Keep PRs focused and small. A PR that changes one thing is reviewed faster and is easier to revert if something goes
+wrong. If a feature needs multiple services changed, consider splitting into:
 
 1. `chore[db]`: schema / migration PR
 2. `feat[backend]`: API endpoint PR
 3. `feat[frontend]`: UI PR
+
+---
+
+## Troubleshooting
+
+### Backend microservice not starting up
+
+If one or more microservices fail to start, try resetting the local environment:
+
+```bash
+make dev-down
+make dev-clean
+make dev-build
+```
 
 ---
 

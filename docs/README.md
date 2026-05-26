@@ -10,7 +10,7 @@ Use the links below to quickly navigate to important documents and architecture 
 
 ### Architecture
 
-- [Backend Architecture Document](./backend/movie-reservation-system_backend-architecture_v-1-0.pdf)
+- [Backend Architecture Document](./backend/movie-reservation-system_backend-architecture.pdf)
 
 ---
 

@@ -9,24 +9,26 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from os import getenv
+
+from iam.rate_limiting import THROTTLE_RATES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-y8u-ojb4k_pbloi3kg5w)amuqc5u6-v4$78h!de=8mc^q3gj7w'
+SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_ALLOWED_ORIGINS', 'http://localhost,http://127.0.0.1').split(',')
 
 # Application definition
 
@@ -37,9 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'iam',
+    'drf_spectacular'
 ]
+AUTH_USER_MODEL = 'iam.User'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,17 +76,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'microservice_iam.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': getenv('DB_ENGINE'),
+        'NAME': getenv('DB_NAME'),
+        'USER': getenv('DB_USER'),
+        'PASSWORD': getenv('DB_PASSWORD'),
+        'HOST': getenv('DB_HOST'),
+        'PORT': getenv('DB_PORT'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -98,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
@@ -110,8 +119,111 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Logging
+os.makedirs(BASE_DIR / "logs", exist_ok=True)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    # ── Formatters ────────────────────────────────────────────────
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name} {module}:{lineno} — {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+        "simple": {
+            "format": "[{asctime}] {levelname} — {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+
+    # ── Handlers ──────────────────────────────────────────────────
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs" / "general__django.log",
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+            "backupCount": 5,
+            "formatter": "verbose",
+            "level": "DEBUG" if DEBUG else getenv("DJANGO_LOG_LEVEL", "WARNING"),
+        },
+        "django_auth_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs" / "general__django_auth.log",
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 5,
+            "formatter": "verbose",
+            "level": "DEBUG",
+        },
+        "iam_event_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": BASE_DIR / "logs" / "iam_events.log",
+            "maxBytes": 1024 * 1024 * 10,  # 10 MB
+            "backupCount": 5,
+            "formatter": "verbose",
+            "level": "DEBUG" if DEBUG else "INFO",
+        },
+    },
+
+    # ── Loggers ───────────────────────────────────────────────────
+    "loggers": {
+        # General Django internals
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,  # prevent double-logging
+        },
+        # SQL queries — useful in dev, very noisy
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "DEBUG" if DEBUG else "WARNING",
+            "propagate": False,
+        },
+        # Built-in Django auth signals (login/logout/failed login)
+        "django.security": {
+            "handlers": ["django_auth_file", "console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        # IAM
+        "iam": {
+            "handlers": ["console", "iam_event_file"],
+            "level": "DEBUG" if DEBUG else "INFO",
+            "propagate": False,
+        },
+    },
+}
+
+# Cookies
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_NAME = "isfdntr93u"
+
+# Django Rest Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_RATES': THROTTLE_RATES,
+}
+
+# Swagger API Docs Settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Movie Reservation System API',
+    'DESCRIPTION': 'API Docs',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
