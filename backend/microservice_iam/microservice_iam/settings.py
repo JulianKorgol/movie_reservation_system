@@ -13,8 +13,6 @@ import os
 from pathlib import Path
 from os import getenv
 
-from django.core.mail.backends import console
-
 from iam.rate_limiting import THROTTLE_RATES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv('DJANGO_DEBUG')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS').split(',')
-CORS_ALLOWED_ORIGINS = getenv('DJANGO_ALLOWED_ORIGINS').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('DJANGO_ALLOWED_ORIGINS', 'http://localhost,http://127.0.0.1').split(',')
 
 # Application definition
 
@@ -208,8 +206,8 @@ LOGGING = {
 }
 
 # Cookies
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_NAME = "isfdntr93u"
 
