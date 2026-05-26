@@ -6,6 +6,7 @@ from iam.views import general
 
 
 router = routers.DefaultRouter()
+internal_endpoint_path = "internal/"
 
 urlpatterns = [
     path('health-check/', general.HealthCheckView.as_view()),
