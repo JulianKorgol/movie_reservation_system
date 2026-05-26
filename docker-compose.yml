@@ -165,7 +165,7 @@ services:
       # Create from: envs/.env.postgres-iam.example
       - ./envs/.env.postgres-iam
     volumes:
-      - postgres-iam-data:/var/lib/postgresql/data
+      - postgres-iam-data:/var/lib/postgresql
     deploy:
       resources:
         limits:
