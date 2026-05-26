@@ -7,6 +7,7 @@ A cinema reservation system built using a microservices architecture and based o
 ## Table of Contents
 
 - [Getting Started](#getting-started)
+- [Docs](#docs)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Guidelines](#pull-request-guidelines)
 
@@ -59,6 +60,17 @@ flutter doctor
 # Xcode (use Apple App Store to check)
 26.5
 ```
+
+---
+
+## Docs
+
+Documentation can be found in the /docs/ folder.
+[Documentation list](./docs/README.md)
+
+### API Docs
+Every microservice has a Swagger-generated API documentation page:
+- [IAM Microservice Swagger Docs](http://localhost/api/iam/admin/docs/)
 
 ---
 
