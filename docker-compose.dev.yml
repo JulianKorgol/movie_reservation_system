@@ -43,7 +43,7 @@ services:
       - ./backend/microservice_iam:/app
     environment:
       # Safe to set non-secret dev overrides inline; secrets still come from env_file
-      - DJANGO_DEBUG=true
+      - DJANGO_DEBUG=True
     read_only: false
     tmpfs: [ ]
     deploy:
