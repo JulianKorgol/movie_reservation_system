@@ -38,7 +38,6 @@ services:
       context: ./backend/microservice_iam
       dockerfile: Dockerfile
       target: development
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       # Bind-mount source so code changes appear without rebuilding the image
       - ./backend/microservice_iam:/app
@@ -46,7 +45,7 @@ services:
       # Safe to set non-secret dev overrides inline; secrets still come from env_file
       - DJANGO_DEBUG=true
     read_only: false
-    tmpfs: []
+    tmpfs: [ ]
     deploy:
       resources:
         limits:
@@ -61,7 +60,7 @@ services:
       context: ./frontend/frontend_main_app
       dockerfile: Dockerfile
       target: development
-    command: ["npm", "run", "dev"]
+    command: [ "npm", "run", "dev" ]
     volumes:
       # Source mount — changes visible immediately
       - ./frontend/frontend_main_app:/app
@@ -72,7 +71,7 @@ services:
       - WATCHPACK_POLLING=true
       - NODE_ENV=development
     read_only: false
-    tmpfs: []
+    tmpfs: [ ]
     deploy:
       resources:
         limits:

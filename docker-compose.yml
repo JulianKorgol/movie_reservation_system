@@ -22,7 +22,7 @@ name: movie_reservation_system
 
 # Applied to almost all containers
 x-security-defaults: &security-defaults
-  cap_drop: [ALL]
+  cap_drop: [ ALL ]
   security_opt:
     - no-new-privileges:true
   user: "1001:1001"
@@ -44,7 +44,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    cap_drop: [ALL]
+    cap_drop: [ ALL ]
     cap_add:
       - NET_BIND_SERVICE
       - CHOWN
@@ -76,7 +76,7 @@ services:
     restart: unless-stopped
     healthcheck:
       # nc (busybox) checks TCP — succeeds if nginx is accepting connections
-      test: ["CMD-SHELL", "nc -z -w 3 127.0.0.1 80 || exit 1"]
+      test: [ "CMD-SHELL", "nc -z -w 3 127.0.0.1 80 || exit 1" ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -93,13 +93,15 @@ services:
     <<: *app-hardening
     networks:
       - backend-net
-    ports: []
+    ports: [ ]
     env_file:
       # Create from: envs/.env.microservice-iam.example
       - ./envs/.env.microservice-iam
     depends_on:
       postgres-iam:
         condition: service_healthy
+    volumes:
+      - ./backend/microservice_iam/iam_public_key:/app/iam_public_key
     deploy:
       resources:
         limits:
@@ -108,7 +110,7 @@ services:
     restart: unless-stopped
     healthcheck:
       # curl is installed in the Dockerfile — require a successful response
-      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/api/iam/v1/health-check/ | grep -qE '^2[0-9]{2}$'"]
+      test: [ "CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/api/iam/v1/health-check/ | grep -qE '^2[0-9]{2}$'" ]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -128,7 +130,7 @@ services:
     <<: *app-hardening
     networks:
       - backend-net
-    ports: []
+    ports: [ ]
     env_file:
       # Create from: envs/.env.frontend-main-app.example
       - ./envs/.env.frontend-main-app
@@ -137,10 +139,12 @@ services:
         limits:
           memory: 512M
           cpus: "1.00"
+    volumes:
+      - ./backend/microservice_iam/iam_public_key:/app/iam_public_key:ro
     restart: unless-stopped
     healthcheck:
       # curl is installed in the Dockerfile — require a successful response
-      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:3000/ | grep -qE '^2[0-9]{2}$'"]
+      test: [ "CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:3000/ | grep -qE '^2[0-9]{2}$'" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -154,13 +158,13 @@ services:
     # Postgres drops privileges internally; it needs SETUID/SETGID to do so.
     # CHOWN is required so the official entrypoint can fix ownership on a new
     # data volume before initialization; DAC_READ_SEARCH is retained for file access.
-    cap_drop: [ALL]
-    cap_add: [FOWNER, CHOWN, SETUID, SETGID, DAC_READ_SEARCH]
+    cap_drop: [ ALL ]
+    cap_add: [ FOWNER, CHOWN, SETUID, SETGID, DAC_READ_SEARCH ]
     security_opt:
       - no-new-privileges:true
     networks:
       - backend-net
-    ports: []
+    ports: [ ]
     env_file:
       # Create from: envs/.env.postgres-iam.example
       - ./envs/.env.postgres-iam
@@ -173,7 +177,7 @@ services:
           cpus: "0.50"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 10s
       timeout: 5s
       retries: 5

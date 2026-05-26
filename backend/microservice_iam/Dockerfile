@@ -38,7 +38,7 @@ FROM base AS development
 COPY --chown=appuser:appgroup . .
 
 # Overridden by docker-compose.dev.yml command: + bind-mounted source
-CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+CMD python manage.py migrate && python manage.py generate_iam_keys --autodevrun && python manage.py runserver 0.0.0.0:8000
 
 # ═════════════════════════════════════════════════════════════════════════════
 # PRODUCTION — Gunicorn WSGI server (multi-worker, no auto-reload)
