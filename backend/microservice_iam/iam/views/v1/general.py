@@ -7,6 +7,8 @@ from rest_framework.response import Response
 
 from drf_spectacular.utils import extend_schema
 
+from iam.serializers.input.v1.general import HealthCheckViewSerializer
+
 
 @extend_schema(
     summary='Health Check',
@@ -15,6 +17,7 @@ from drf_spectacular.utils import extend_schema
 )
 class HealthCheckView(generics.GenericAPIView):
     permission_classes = [AllowAny]
+    serializer_class = HealthCheckViewSerializer
 
     @extend_schema(auth=[])
     def get(self, req):

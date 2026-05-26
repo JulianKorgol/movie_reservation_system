@@ -2,8 +2,7 @@ from django.urls import path
 
 from rest_framework import routers
 
-from iam.views import general
-
+from iam.views.v1 import general
 
 router = routers.DefaultRouter()
 internal_endpoint_path = "internal/"
