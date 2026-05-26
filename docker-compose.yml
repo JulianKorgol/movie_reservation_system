@@ -108,7 +108,7 @@ services:
     restart: unless-stopped
     healthcheck:
       # curl is installed in the Dockerfile — require a successful response
-      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/ | grep -qE '^2[0-9]{2}$'"]
+      test: ["CMD-SHELL", "curl -so/dev/null -w '%{http_code}' http://127.0.0.1:8000/api/iam/v1/health-check/ | grep -qE '^2[0-9]{2}$'"]
       interval: 30s
       timeout: 5s
       retries: 3

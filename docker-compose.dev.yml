@@ -20,8 +20,15 @@ name: movie_reservation_system
 
 services:
 
-  # ── NGINX — no changes needed in dev ─────────────────────────────────────
-  # nginx is intentionally omitted; the base definition is used as-is.
+  # ┌─────────────────────────────────────────────────────────────────────────┐
+  # │  NGINX — sole public entry point                                        │
+  # └─────────────────────────────────────────────────────────────────────────┘
+  nginx:
+    depends_on:
+      microservice_iam:
+        condition: service_started
+      frontend-main-app:
+        condition: service_started
 
   # ┌─────────────────────────────────────────────────────────────────────────┐
   # │  AUTH SERVICE — Django runserver with auto-reload                       │
