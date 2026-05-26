@@ -15,7 +15,7 @@ public_key_path = os.path.join(keys_dir, "public_key.pem")
 
 
 class Command(BaseCommand):
-    help = "Generates IAM asymetric keys for JWT signing"
+    help = "Generates IAM asymmetric keys for JWT signing"
 
     def add_arguments(self, parser):
         parser.add_argument(
