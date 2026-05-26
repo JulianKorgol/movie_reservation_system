@@ -37,7 +37,7 @@ make dev
 
 ### Mobile App
 
-To run mobile application, first prepare your enviroment with
+To run mobile application, first prepare your environment with
 docs: [flutter docs](https://docs.flutter.dev/install/quick)
 
 Remember to have Xcode installed: [Xcode App Store link](https://apps.apple.com/us/app/xcode/id497799835?mt=12)
