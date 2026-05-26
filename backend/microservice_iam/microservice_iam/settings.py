@@ -15,6 +15,8 @@ from os import getenv
 
 from django.core.mail.backends import console
 
+from iam.rate_limiting import THROTTLE_RATES
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -217,6 +219,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_THROTTLE_RATES': THROTTLE_RATES,
 }
 
 # Swagger API Docs Settings

@@ -54,8 +54,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    is_active = None
-
     @property
     def is_active(self):
         return self.status == 1
@@ -78,6 +76,8 @@ class UserDetails(models.Model):
     date_joined = models.DateTimeField(auto_now_add=True, editable=False)
     country = models.CharField(max_length=3,
                                help_text="Reference: Location.Country.code")  # Reference to external microservice
+    email_confirmation_token = models.CharField(max_length=64, null=True, blank=True)
+    pending_email = models.EmailField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "User Details"
@@ -93,6 +93,7 @@ class RefreshToken(models.Model):
     issued_ip = models.GenericIPAddressField(null=True, blank=True)
     expires_at = models.DateTimeField()
     is_revoked = models.BooleanField(default=False)
+    is_sudo_mode_enabled = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Token for {self.user.email} (Exp: {self.expires_at})"
